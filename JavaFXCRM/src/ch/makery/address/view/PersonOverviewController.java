@@ -213,16 +213,17 @@ initGrid();
                  log("setOnDragDetected("+me+")");
                  final Dragboard db = where.startDragAndDrop(TransferMode.COPY);
                  final ClipboardContent content = new ClipboardContent();
-                 content.putString("Drag Me!");
+                 content.putString(where.toString());
+                 log(content);
                  db.setContent(content);
                  me.consume();
             }
        });
-    	where.setOnDragEntered(new EventHandler<DragEvent>() {
+    	/*where.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override public void handle(final DragEvent de) {
             	log("setOnDragEntered("+de+")");
             }
-       });
+       });*/
        
     	where.setOnDragOver(new EventHandler<DragEvent>() {
             @Override public void handle(final DragEvent de) {
@@ -233,7 +234,14 @@ initGrid();
        });
     	where.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override public void handle(final DragEvent de) {
-
+                Object source = de.getSource();
+  	          Button clickedBtn = (Button) source; // that's the button that was clicked
+  	        log(clickedBtn);
+  	        
+  	      Dragboard db = de.getDragboard();
+  	    log(db.getString());
+        	Person selectedPerson = telephones.getSelectionModel().getSelectedItem();
+  	        clickedBtn.setText(selectedPerson.getFirstName()); // prints the id of the button
             	log("setOnDragDropped("+de+")");
             }
        });
@@ -309,8 +317,7 @@ initGrid();
                 	});
                  }
         }
-        
-    //    calendaar.getChildren().add(gridpane);      
+            
       
     }
 }
