@@ -14,6 +14,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.ClipboardContent;
@@ -27,16 +29,19 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.util.Callback;
 import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
 import ch.makery.address.util.DateUtil;
 
 public class PersonOverviewController {
-  
-    @FXML
+  Person superPerson;
+  /*  @FXML
     private TableView<Person> telephones;
     @FXML
-    private TableColumn<Person, String> telephonesCol;
+    private TableColumn<Person, String> telephonesCol;*/
+    @FXML
+    private ListView<Person> telephones;
   /*  @FXML
     private TableView<Person> personTable;
     @FXML
@@ -86,17 +91,14 @@ public class PersonOverviewController {
     	
         // Initialize the person table with the two columns.
 
-        telephonesCol.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
-        
-        telephonesCol.setCellFactory(TextFieldTableCell.forTableColumn());
-
+     /*   telephones.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+        telephonesCol.setCellFactory(TextFieldTableCell.forTableColumn());*/
+    /*	MainApp.getPersonData().get(1);
+        telephones.setItems(personData.firstNameProperty());*/
         // Clear person details.
         showPersonDetails(null);
-        
 
-addDnDlisteners(telephones);
 addDnDlisteners(DragMeButton);
-addDnDlisteners(firstNameLabel);
 initGrid();
         // Listen for selection changes and show the person details when changed.
 
@@ -116,6 +118,26 @@ initGrid();
         // Add observable list data to the table
 
         telephones.setItems(mainApp.getPersonData());
+        telephones.setCellFactory(new Callback<ListView<Person>, ListCell<Person>>(){
+            @Override
+            public ListCell<Person> call(ListView<Person> p) {
+                
+                ListCell<Person> cell = new ListCell<Person>(){
+
+                    @Override
+                    protected void updateItem(Person t, boolean bln) {
+                        super.updateItem(t, bln);
+                        if (t != null) {
+                            setText(t.getFirstName());
+                        }
+                    }
+
+                };
+                
+                return cell;
+            }
+        });
+
     }
     
     /**
@@ -127,6 +149,7 @@ initGrid();
     private void showPersonDetails(Person person) {
         if (person != null) {
             // Fill the labels with info from the person object.
+        	superPerson=person;
             firstNameLabel.setText(person.getFirstName());
             lastNameLabel.setText(person.getLastName());
             streetLabel.setText(person.getStreet());
@@ -236,12 +259,16 @@ initGrid();
             @Override public void handle(final DragEvent de) {
                 Object source = de.getSource();
   	          Button clickedBtn = (Button) source; // that's the button that was clicked
-  	        log(clickedBtn);
+	          int x = GridPane.getColumnIndex(clickedBtn);
+	          int y = GridPane.getRowIndex(clickedBtn);
   	        
+	          System.out.println(x+"||"+y);
+	          
   	      Dragboard db = de.getDragboard();
   	    log(db.getString());
-        	Person selectedPerson = telephones.getSelectionModel().getSelectedItem();
-  	        clickedBtn.setText(selectedPerson.getFirstName()); // prints the id of the button
+        //	Person selectedPerson = telephones.getSelectionModel().getSelectedItem();
+        	String telPerson = superPerson.getFirstName();
+  	        clickedBtn.setText(telPerson); // prints the id of the button
             	log("setOnDragDropped("+de+")");
             }
        });
@@ -252,16 +279,11 @@ initGrid();
     	String correctHour = null;
         GridPane gridpane = calendaar;
         gridpane.setPadding(new Insets(5));
-       // calendaar.setLeftAnchor(gridpane, 50.0); calendaar.setRightAnchor(gridpane, 50.0); calendaar.setTopAnchor(gridpane, 50.0); calendaar.setBottomAnchor(gridpane, 50.0);
         gridpane.setHgap(0);
         gridpane.setVgap(0);
        
-        Label candidatesLbl = new Label("Left");
-        GridPane.setHalignment(candidatesLbl, HPos.CENTER);
-        gridpane.add(candidatesLbl, 0, 0);
-
         
-        for (int j = 0; j < 21; j++) {
+       /* for (int j = 0; j < 21; j++) {
             ColumnConstraints cc = new ColumnConstraints();
             cc.setHgrow(Priority.SOMETIMES);
             gridpane.getColumnConstraints().add(cc);
@@ -271,9 +293,7 @@ initGrid();
             RowConstraints rc = new RowConstraints();
             rc.setVgrow(Priority.SOMETIMES);
             gridpane.getRowConstraints().add(rc);
-        }
-        
-        
+        }*/
         
         
         
@@ -286,12 +306,15 @@ initGrid();
         	 Label sr = new Label(correctHour);
         	 gridpane.add(sr, 0, j);
         	 
+        	 
              for (i=1;i<6;i++){
             	 
                  Button dgfh = new Button(); //can add text
                  dgfh.setStyle("-fx-background-radius: 0;-fx-background-color:  #FAFAFA;-fx-border-color:  #ADADAD;-fx-border-width: 0 0.3 0 0.3;");
                  if ((j & 1) == 1 )dgfh.setStyle("-fx-background-color:  #EBF3FF;-fx-border-color:  #ADADAD;-fx-border-width: 0 0.3 0 0.3;");
-                 dgfh.setPrefWidth(150);
+               //  dgfh.setPrefWidth(150);
+                 dgfh.setMaxWidth(Double.MAX_VALUE);
+                 dgfh.setMaxHeight(Double.MAX_VALUE);
                  gridpane.add(dgfh, i, j);
 
                  addDnDlisteners(dgfh);
@@ -300,6 +323,7 @@ initGrid();
                 	    @Override public void handle(ActionEvent e) {
                 	    Button newButt = new Button();
                 	      HBox hbox1 = new HBox();
+                	      
                 	      Object source = e.getSource();
 
                 	          Button clickedBtn = (Button) source; // that's the button that was clicked
@@ -311,8 +335,13 @@ initGrid();
                 	          clickedBtn.setText("Added"); // prints the id of the button
                 	      
                 	      gridpane.add(hbox1, i, j);
-                	      dgfh.setPrefWidth(130);
+                	      dgfh.setMaxWidth(Double.MAX_VALUE);
+                
+                	      newButt.setMaxWidth(10);
                 	      hbox1.getChildren().addAll(dgfh,newButt);    
+                	      HBox.setHgrow(dgfh, Priority.ALWAYS);
+                	      HBox.setHgrow(newButt, Priority.ALWAYS);
+ 
                 	    }
                 	});
                  }
