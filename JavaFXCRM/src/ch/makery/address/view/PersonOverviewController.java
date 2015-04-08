@@ -94,11 +94,6 @@ public class PersonOverviewController {
     	
         // Initialize the person table with the two columns.
 
-     /*   telephones.setCellValueFactory(cellData -> cellData.getValue().initTelProperty());
-        telephonesCol.setCellFactory(TextFieldTableCell.forTableColumn());*/
-    /*	MainApp.getPersonData().get(1);
-        telephones.setItems(personData.initTelProperty());*/
-        // Clear person details.
         showPersonDetails(null);
 
 addDnDlisteners(DragMeButton);
@@ -107,7 +102,6 @@ initGrid();
 
         telephones.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showPersonDetails(newValue));
-        
     }
 
     /**

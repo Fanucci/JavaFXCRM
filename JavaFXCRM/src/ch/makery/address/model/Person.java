@@ -24,6 +24,7 @@ public class Person {
     private final ObjectProperty<LocalTime> queryTime;
     private final ObjectProperty<LocalDate> queryDate;
 	private final SimpleStringProperty whereFrom;
+	private final SimpleStringProperty partnersMail;
 
     /**
      * Default constructor.
@@ -48,9 +49,10 @@ public class Person {
         this.queryTime =new SimpleObjectProperty<LocalTime>(LocalTime.of(11, 30, 12));
         this.queryDate = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
         this.whereFrom = new SimpleStringProperty("Friends");
+        this.partnersMail = new SimpleStringProperty("rwe@sfdgh.ru");
     }
     
-    public Person(String initTel, String theIP, String region,String promoCode,String whereFrom) {
+    public Person(String initTel, String theIP, String region,String promoCode,String whereFrom, LocalTime queryTime, LocalDate queryDate, String partnersMail) {
         this.initTel = new SimpleStringProperty(initTel);
         this.theIP = new SimpleStringProperty(theIP);
 
@@ -60,6 +62,7 @@ public class Person {
         this.queryTime =new SimpleObjectProperty<LocalTime>(LocalTime.of(11, 30, 12));
         this.queryDate = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
         this.whereFrom = new SimpleStringProperty(region);
+        this.partnersMail = new SimpleStringProperty(partnersMail);
     }
     
 
