@@ -157,7 +157,7 @@ initGrid();
             theIPLabel.setText(person.gettheIP());
             regionLabel.setText(person.getregion());
             whereFromLabel.setText(person.getwhereFrom());
-            promoCodeLabel.setText(Integer.toString(person.getpromoCode()));
+            promoCodeLabel.setText(person.getpromoCode());
             queryTimeLabel.setText(TimeUtil.format(person.getqueryTime()));
             queryDateLabel.setText(DateUtil.format(person.getqueryDate()));
         } else {

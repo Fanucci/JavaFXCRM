@@ -20,7 +20,7 @@ public class Person {
     private final StringProperty initTel;
     private final StringProperty theIP;
     private final StringProperty region;
-    private final IntegerProperty promoCode;
+    private final SimpleStringProperty promoCode;
     private final ObjectProperty<LocalTime> queryTime;
     private final ObjectProperty<LocalDate> queryDate;
 	private final SimpleStringProperty whereFrom;
@@ -44,11 +44,24 @@ public class Person {
 
         // Some initial dummy data, just for convenient testing.
         this.region = new SimpleStringProperty("some region");
-        this.promoCode = new SimpleIntegerProperty(1234);
+        this.promoCode = new SimpleStringProperty("88889");
         this.queryTime =new SimpleObjectProperty<LocalTime>(LocalTime.of(11, 30, 12));
         this.queryDate = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
         this.whereFrom = new SimpleStringProperty("Friends");
     }
+    
+    public Person(String initTel, String theIP, String region,String promoCode,String whereFrom) {
+        this.initTel = new SimpleStringProperty(initTel);
+        this.theIP = new SimpleStringProperty(theIP);
+
+        // Some initial dummy data, just for convenient testing.
+        this.region =  new SimpleStringProperty(region);
+        this.promoCode = new SimpleStringProperty(promoCode);
+        this.queryTime =new SimpleObjectProperty<LocalTime>(LocalTime.of(11, 30, 12));
+        this.queryDate = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
+        this.whereFrom = new SimpleStringProperty(region);
+    }
+    
 
     public String getinitTel() {
         return initTel.get();
@@ -86,15 +99,15 @@ public class Person {
         return region;
     }
 
-    public int getpromoCode() {
+    public String getpromoCode() {
         return promoCode.get();
     }
 
-    public void setpromoCode(int promoCode) {
+    public void setpromoCode(String promoCode) {
         this.promoCode.set(promoCode);
     }
 
-    public IntegerProperty promoCodeProperty() {
+    public SimpleStringProperty promoCodeProperty() {
         return promoCode;
     }
 
