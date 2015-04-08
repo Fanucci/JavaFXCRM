@@ -86,22 +86,25 @@
                         <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="24.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="Телефон" />
-                        <Label text="Last Name" GridPane.rowIndex="1" />
-                        <Label text="Street" GridPane.rowIndex="2" />
-                        <Label text="City" GridPane.rowIndex="3" />
-                        <Label text="Postal Code" GridPane.rowIndex="4" />
-                        <Label text="Birthday" GridPane.rowIndex="5" />
-                        <Label fx:id="firstNameLabel" text="Label" GridPane.columnIndex="1" />
-                        <Button fx:id="DragMeButton" mnemonicParsing="false" text="Button" GridPane.rowIndex="6" />
-                        <Label fx:id="lastNameLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="streetLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label fx:id="cityLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label fx:id="postalCodeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label fx:id="birthdayLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label text="IP" GridPane.rowIndex="5" />
+                        <Label text="Регион" GridPane.rowIndex="1" />
+                        <Label text="Время запроса" GridPane.rowIndex="2" />
+                        <Label text="Промокод" GridPane.rowIndex="4" />
+                        <Label text="Дата запроса" GridPane.rowIndex="3" />
+                        <Label fx:id="initTelLabel" text="Label" GridPane.columnIndex="1" />
+                        <Button fx:id="DragMeButton" mnemonicParsing="false" text="Button" GridPane.rowIndex="7" />
+                        <Label fx:id="theIPLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="regionLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="queryTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label fx:id="promoCodeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label fx:id="queryDateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label text="Откуда узнал" GridPane.rowIndex="6" />
+                        <Label fx:id="whereFromLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                      </children>
                   </GridPane>
                   <ButtonBar layoutX="54.0" layoutY="250.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">

@@ -33,6 +33,7 @@ import javafx.util.Callback;
 import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
 import ch.makery.address.util.DateUtil;
+import ch.makery.address.util.TimeUtil;
 
 public class PersonOverviewController {
   Person superPerson;
@@ -57,17 +58,19 @@ public class PersonOverviewController {
     private GridPane calendaar;
 
    @FXML
-    private Label firstNameLabel;
+    private Label initTelLabel;
     @FXML
-    private Label lastNameLabel;
+    private Label theIPLabel;
     @FXML
-    private Label streetLabel;
+    private Label regionLabel;
     @FXML
-    private Label postalCodeLabel;
+    private Label whereFromLabel;
     @FXML
-    private Label cityLabel;
+    private Label promoCodeLabel;
     @FXML
-    private Label birthdayLabel;
+    private Label queryTimeLabel;
+    @FXML
+    private Label queryDateLabel;
 
     // Reference to the main application.
     private MainApp mainApp;
@@ -91,10 +94,10 @@ public class PersonOverviewController {
     	
         // Initialize the person table with the two columns.
 
-     /*   telephones.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+     /*   telephones.setCellValueFactory(cellData -> cellData.getValue().initTelProperty());
         telephonesCol.setCellFactory(TextFieldTableCell.forTableColumn());*/
     /*	MainApp.getPersonData().get(1);
-        telephones.setItems(personData.firstNameProperty());*/
+        telephones.setItems(personData.initTelProperty());*/
         // Clear person details.
         showPersonDetails(null);
 
@@ -128,7 +131,7 @@ initGrid();
                     protected void updateItem(Person t, boolean bln) {
                         super.updateItem(t, bln);
                         if (t != null) {
-                            setText(t.getFirstName());
+                            setText(t.getinitTel());
                         }
                     }
 
@@ -150,20 +153,22 @@ initGrid();
         if (person != null) {
             // Fill the labels with info from the person object.
         	superPerson=person;
-            firstNameLabel.setText(person.getFirstName());
-            lastNameLabel.setText(person.getLastName());
-            streetLabel.setText(person.getStreet());
-            postalCodeLabel.setText(Integer.toString(person.getPostalCode()));
-            cityLabel.setText(person.getCity());
-            birthdayLabel.setText(DateUtil.format(person.getBirthday()));
+            initTelLabel.setText(person.getinitTel());
+            theIPLabel.setText(person.gettheIP());
+            regionLabel.setText(person.getregion());
+            whereFromLabel.setText(person.getwhereFrom());
+            promoCodeLabel.setText(Integer.toString(person.getpromoCode()));
+            queryTimeLabel.setText(TimeUtil.format(person.getqueryTime()));
+            queryDateLabel.setText(DateUtil.format(person.getqueryDate()));
         } else {
             // Person is null, remove all the text.
-            firstNameLabel.setText("");
-            lastNameLabel.setText("");
-            streetLabel.setText("");
-            postalCodeLabel.setText("");
-            cityLabel.setText("");
-            birthdayLabel.setText("");
+            initTelLabel.setText("");
+            theIPLabel.setText("");
+            regionLabel.setText("");
+            whereFromLabel.setText("");
+            promoCodeLabel.setText("");
+            queryTimeLabel.setText("");
+            queryDateLabel.setText("");
         }
     }
     
@@ -267,7 +272,7 @@ initGrid();
   	      Dragboard db = de.getDragboard();
   	    log(db.getString());
         //	Person selectedPerson = telephones.getSelectionModel().getSelectedItem();
-        	String telPerson = superPerson.getFirstName();
+        	String telPerson = superPerson.getinitTel();
   	        clickedBtn.setText(telPerson); // prints the id of the button
             	log("setOnDragDropped("+de+")");
             }

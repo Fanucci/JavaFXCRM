@@ -1,6 +1,7 @@
 package ch.makery.address.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -16,12 +17,13 @@ import javafx.beans.property.StringProperty;
  */
 public class Person {
 
-    private final StringProperty firstName;
-    private final StringProperty lastName;
-    private final StringProperty street;
-    private final IntegerProperty postalCode;
-    private final StringProperty city;
-    private final ObjectProperty<LocalDate> birthday;
+    private final StringProperty initTel;
+    private final StringProperty theIP;
+    private final StringProperty region;
+    private final IntegerProperty promoCode;
+    private final ObjectProperty<LocalTime> queryTime;
+    private final ObjectProperty<LocalDate> queryDate;
+	private final SimpleStringProperty whereFrom;
 
     /**
      * Default constructor.
@@ -33,89 +35,102 @@ public class Person {
     /**
      * Constructor with some initial data.
      * 
-     * @param firstName
-     * @param lastName
+     * @param initTel
+     * @param theIP
      */
-    public Person(String firstName, String lastName) {
-        this.firstName = new SimpleStringProperty(firstName);
-        this.lastName = new SimpleStringProperty(lastName);
+    public Person(String initTel, String theIP) {
+        this.initTel = new SimpleStringProperty(initTel);
+        this.theIP = new SimpleStringProperty(theIP);
 
         // Some initial dummy data, just for convenient testing.
-        this.street = new SimpleStringProperty("some street");
-        this.postalCode = new SimpleIntegerProperty(1234);
-        this.city = new SimpleStringProperty("some city");
-        this.birthday = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
+        this.region = new SimpleStringProperty("some region");
+        this.promoCode = new SimpleIntegerProperty(1234);
+        this.queryTime =new SimpleObjectProperty<LocalTime>(LocalTime.of(11, 30, 12));
+        this.queryDate = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
+        this.whereFrom = new SimpleStringProperty("Friends");
     }
 
-    public String getFirstName() {
-        return firstName.get();
+    public String getinitTel() {
+        return initTel.get();
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName.set(firstName);
+    public void setinitTel(String initTel) {
+        this.initTel.set(initTel);
     }
 
-    public StringProperty firstNameProperty() {
-        return firstName;
+    public StringProperty initTelProperty() {
+        return initTel;
     }
 
-    public String getLastName() {
-        return lastName.get();
+    public String gettheIP() {
+        return theIP.get();
     }
 
-    public void setLastName(String lastName) {
-        this.lastName.set(lastName);
+    public void settheIP(String theIP) {
+        this.theIP.set(theIP);
     }
 
-    public StringProperty lastNameProperty() {
-        return lastName;
+    public StringProperty theIPProperty() {
+        return theIP;
     }
 
-    public String getStreet() {
-        return street.get();
+    public String getregion() {
+        return region.get();
     }
 
-    public void setStreet(String street) {
-        this.street.set(street);
+    public void setregion(String region) {
+        this.region.set(region);
     }
 
-    public StringProperty streetProperty() {
-        return street;
+    public StringProperty regionProperty() {
+        return region;
     }
 
-    public int getPostalCode() {
-        return postalCode.get();
+    public int getpromoCode() {
+        return promoCode.get();
     }
 
-    public void setPostalCode(int postalCode) {
-        this.postalCode.set(postalCode);
+    public void setpromoCode(int promoCode) {
+        this.promoCode.set(promoCode);
     }
 
-    public IntegerProperty postalCodeProperty() {
-        return postalCode;
+    public IntegerProperty promoCodeProperty() {
+        return promoCode;
     }
 
-    public String getCity() {
-        return city.get();
+    public LocalTime getqueryTime() {
+        return queryTime.get();
     }
 
-    public void setCity(String city) {
-        this.city.set(city);
+    public void setqueryTime(LocalTime queryTime) {
+        this.queryTime.set(queryTime);
     }
 
-    public StringProperty cityProperty() {
-        return city;
+    public ObjectProperty<LocalTime> queryTimeProperty() {
+        return queryTime;
     }
 
-    public LocalDate getBirthday() {
-        return birthday.get();
+    public LocalDate getqueryDate() {
+        return queryDate.get();
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday.set(birthday);
+    public void setqueryDate(LocalDate queryDate) {
+        this.queryDate.set(queryDate);
     }
 
-    public ObjectProperty<LocalDate> birthdayProperty() {
-        return birthday;
+    public ObjectProperty<LocalDate> queryDateProperty() {
+        return queryDate;
+    }
+    
+    public String getwhereFrom() {
+        return whereFrom.get();
+    }
+
+    public void setwhereFrom(String theIP) {
+        this.whereFrom.set(theIP);
+    }
+
+    public StringProperty whereFromroperty() {
+        return whereFrom;
     }
 }

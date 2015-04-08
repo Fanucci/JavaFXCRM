@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import ch.makery.address.model.Person;
 import ch.makery.address.view.PersonEditDialogController;
 import ch.makery.address.view.PersonOverviewController;
+import ch.makery.address.view.RootLayoutController;
 
 public class MainApp extends Application {
 
@@ -30,15 +31,15 @@ public class MainApp extends Application {
      */
     public MainApp() {
         // Add some sample data
-        personData.add(new Person("89121368647", "Muster"));
-        personData.add(new Person("89123968786", "Mueller"));
-        personData.add(new Person("89192361803", "Kurz"));
+        personData.add(new Person("89121368647", "31.51.71.34"));
+        personData.add(new Person("89123968786", "314.511.716.324"));
+        personData.add(new Person("89192361803", "3.15.171.4"));
         personData.add(new Person("89164896596", "Meier"));
         personData.add(new Person("89164234566", "Meyer"));
         personData.add(new Person("89123896444", "Kunz"));
         personData.add(new Person("89174916437", "Best"));
         personData.add(new Person("89169866662", "Meier"));
-        personData.add(new Person("89139601333", "Mueller"));
+        personData.add(new Person("89139601333", "35.17.123.57"));
     }
 
     /**
@@ -47,6 +48,10 @@ public class MainApp extends Application {
      */
     public ObservableList<Person> getPersonData() {
         return personData;
+    }
+    
+    public void addPersonData(Person person){
+    	personData.add(person);
     }
 
     @Override
@@ -68,7 +73,12 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
-
+            RootLayoutController controller = loader.getController();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Edit Person");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            controller.setDialogStage(dialogStage);
+            controller.setMainApp(this);
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);

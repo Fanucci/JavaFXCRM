@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ch.makery.address.model.Person;
 import ch.makery.address.util.DateUtil;
+import ch.makery.address.util.TimeUtil;
 
 /**
  * Dialog to edit details of a person.
@@ -16,17 +17,17 @@ import ch.makery.address.util.DateUtil;
 public class PersonEditDialogController {
 
     @FXML
-    private TextField firstNameField;
+    private TextField initTelField;
     @FXML
-    private TextField lastNameField;
+    private TextField theIPField;
     @FXML
-    private TextField streetField;
+    private TextField regionField;
     @FXML
-    private TextField postalCodeField;
+    private TextField promoCodeField;
     @FXML
-    private TextField cityField;
+    private TextField queryTimeField;
     @FXML
-    private TextField birthdayField;
+    private TextField queryDateField;
 
 
     private Stage dialogStage;
@@ -58,13 +59,13 @@ public class PersonEditDialogController {
     public void setPerson(Person person) {
         this.person = person;
 
-        firstNameField.setText(person.getFirstName());
-        lastNameField.setText(person.getLastName());
-        streetField.setText(person.getStreet());
-        postalCodeField.setText(Integer.toString(person.getPostalCode()));
-        cityField.setText(person.getCity());
-        birthdayField.setText(DateUtil.format(person.getBirthday()));
-        birthdayField.setPromptText("dd.mm.yyyy");
+        initTelField.setText(person.getinitTel());
+        theIPField.setText(person.gettheIP());
+        regionField.setText(person.getregion());
+        promoCodeField.setText(Integer.toString(person.getpromoCode()));
+        queryTimeField.setText(TimeUtil.format(person.getqueryTime()));
+        queryDateField.setText(DateUtil.format(person.getqueryDate()));
+        queryDateField.setPromptText("dd.mm.yyyy");
     }
 
     /**
@@ -82,12 +83,12 @@ public class PersonEditDialogController {
     @FXML
     private void handleOk() {
         if (isInputValid()) {
-            person.setFirstName(firstNameField.getText());
-            person.setLastName(lastNameField.getText());
-            person.setStreet(streetField.getText());
-            person.setPostalCode(Integer.parseInt(postalCodeField.getText()));
-            person.setCity(cityField.getText());
-            person.setBirthday(DateUtil.parse(birthdayField.getText()));
+            person.setinitTel(initTelField.getText());
+            person.settheIP(theIPField.getText());
+            person.setregion(regionField.getText());
+            person.setpromoCode(Integer.parseInt(promoCodeField.getText()));
+            person.setqueryTime(TimeUtil.parse(queryTimeField.getText()));
+            person.setqueryDate(DateUtil.parse(queryDateField.getText()));
 
             okClicked = true;
             dialogStage.close();
@@ -110,36 +111,36 @@ public class PersonEditDialogController {
     private boolean isInputValid() {
         String errorMessage = "";
 
-        if (firstNameField.getText() == null || firstNameField.getText().length() == 0) {
+        if (initTelField.getText() == null || initTelField.getText().length() == 0) {
             errorMessage += "No valid first name!\n"; 
         }
-        if (lastNameField.getText() == null || lastNameField.getText().length() == 0) {
+        if (theIPField.getText() == null || theIPField.getText().length() == 0) {
             errorMessage += "No valid last name!\n"; 
         }
-        if (streetField.getText() == null || streetField.getText().length() == 0) {
-            errorMessage += "No valid street!\n"; 
+        if (regionField.getText() == null || regionField.getText().length() == 0) {
+            errorMessage += "No valid region!\n"; 
         }
 
-        if (postalCodeField.getText() == null || postalCodeField.getText().length() == 0) {
-            errorMessage += "No valid postal code!\n"; 
+        if (promoCodeField.getText() == null || promoCodeField.getText().length() == 0) {
+            errorMessage += "No valid promo code!\n"; 
         } else {
-            // try to parse the postal code into an int.
+            // try to parse the promo code into an int.
             try {
-                Integer.parseInt(postalCodeField.getText());
+                Integer.parseInt(promoCodeField.getText());
             } catch (NumberFormatException e) {
-                errorMessage += "No valid postal code (must be an integer)!\n"; 
+                errorMessage += "No valid promo code (must be an integer)!\n"; 
             }
         }
 
-        if (cityField.getText() == null || cityField.getText().length() == 0) {
-            errorMessage += "No valid city!\n"; 
+        if (queryTimeField.getText() == null || queryTimeField.getText().length() == 0) {
+            errorMessage += "No valid queryTime!\n"; 
         }
 
-        if (birthdayField.getText() == null || birthdayField.getText().length() == 0) {
-            errorMessage += "No valid birthday!\n";
+        if (queryDateField.getText() == null || queryDateField.getText().length() == 0) {
+            errorMessage += "No valid queryDate!\n";
         } else {
-            if (!DateUtil.validDate(birthdayField.getText())) {
-                errorMessage += "No valid birthday. Use the format dd.mm.yyyy!\n";
+            if (!DateUtil.validDate(queryDateField.getText())) {
+                errorMessage += "No valid queryDate. Use the format dd.mm.yyyy!\n";
             }
         }
 
