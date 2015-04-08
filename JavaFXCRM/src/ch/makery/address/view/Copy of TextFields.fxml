@@ -98,11 +98,11 @@
                         <Label text="Дата запроса" GridPane.rowIndex="3" />
                         <Label fx:id="initTelLabel" text="Label" GridPane.columnIndex="1" />
                         <Button fx:id="DragMeButton" mnemonicParsing="false" text="Button" GridPane.rowIndex="7" />
-                        <Label fx:id="theIPLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="regionLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label fx:id="queryTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label fx:id="regionLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="queryTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="queryDateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label fx:id="promoCodeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label fx:id="queryDateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label fx:id="theIPLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label text="Откуда узнал" GridPane.rowIndex="6" />
                         <Label fx:id="whereFromLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                      </children>

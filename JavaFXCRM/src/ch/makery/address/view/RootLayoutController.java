@@ -81,6 +81,7 @@ public class RootLayoutController {
                 	newPersonData=excel.readNewBase(true);
                 System.out.println(file);
                 System.out.println(newPersonData);
+                mainApp.newPersonList(newPersonData);
                 }
                 }
 

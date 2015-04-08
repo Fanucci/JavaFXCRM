@@ -148,7 +148,12 @@ public class MainApp extends Application {
             return false;
         }
     }
-
+public void newPersonList(ObservableList<Person> pers){
+	personData.clear();
+	for(Person sf:pers)
+	personData.add(sf);
+	
+}
     /**
      * Returns the main stage.
      * @return

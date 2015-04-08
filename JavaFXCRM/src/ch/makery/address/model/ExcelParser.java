@@ -93,14 +93,10 @@ public class ExcelParser {
         
         cell= row.getCell(9);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)region = cell.getStringCellValue();
-        cell= row.getCell(12);
+        cell= row.getCell(3);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)theIP = cell.getStringCellValue();
-        cell= row.getCell(13);
+        cell= row.getCell(6);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)whereFrom = cell.getStringCellValue();;
-      //  System.out.println(rowsCur);
-        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
-        	System.out.println(format1.format(cell.getDateCellValue()));
-       }
         System.out.println(initTel);
         Person person = new Person(initTel, theIP, region, promoCode, whereFrom, queryTime, queryDate, partnersMail);
 		return person;
@@ -137,8 +133,8 @@ public class ExcelParser {
             fileOut.close();
     	}
         public static void main(String[] args) throws IOException {
-        	ExcelParser job = new ExcelParser(new File("C:\\Users\\Дмитрий\\git\\JavaFXCRM\\JavaFXCRM\\src\\Основная база1 - копия.xlsx"));
-        	Person person=job.readNewBase(false).get(14);
-        	System.out.println(person.getinitTel()+"   ||   "+person.gettheIP());
+        	ExcelParser job = new ExcelParser(new File("C:\\Users\\Дмитрий\\git\\JavaFXCRM\\JavaFXCRM\\src\\база демо 26-28.12.14 - Дима.xlsx"));
+        	Person person=job.readNewBase(true).get(14);
+        	System.out.println(person.getinitTel()+"   ||   "+person.getpromoCode());
         }
 }

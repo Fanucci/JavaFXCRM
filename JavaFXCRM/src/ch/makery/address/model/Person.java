@@ -59,9 +59,9 @@ public class Person {
         // Some initial dummy data, just for convenient testing.
         this.region =  new SimpleStringProperty(region);
         this.promoCode = new SimpleStringProperty(promoCode);
-        this.queryTime =new SimpleObjectProperty<LocalTime>(LocalTime.of(11, 30, 12));
-        this.queryDate = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
-        this.whereFrom = new SimpleStringProperty(region);
+        this.queryTime =new SimpleObjectProperty<LocalTime>(queryTime);
+        this.queryDate = new SimpleObjectProperty<LocalDate>(queryDate);
+        this.whereFrom = new SimpleStringProperty(whereFrom);
         this.partnersMail = new SimpleStringProperty(partnersMail);
     }
     
@@ -142,8 +142,8 @@ public class Person {
         return whereFrom.get();
     }
 
-    public void setwhereFrom(String theIP) {
-        this.whereFrom.set(theIP);
+    public void setwhereFrom(String whereFrom) {
+        this.whereFrom.set(whereFrom);
     }
 
     public StringProperty whereFromroperty() {
