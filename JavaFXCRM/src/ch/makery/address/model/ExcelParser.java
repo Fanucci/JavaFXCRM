@@ -1,5 +1,6 @@
 package ch.makery.address.model;
 
+import ch.makery.address.util.CSV;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Iterator;
 
 import javafx.collections.FXCollections;
@@ -27,6 +29,9 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import ch.makery.address.util.CSV;
+import ch.makery.address.util.Utils;
 
 public class ExcelParser {
 	final DataFormatter df = new DataFormatter();
@@ -69,12 +74,14 @@ public class ExcelParser {
 	public Person readRow(Row row) throws UnsupportedEncodingException, IOException{
 		String initTel=null;
 		String theIP=null;
-		String region=null;
+
 		String promoCode=null;
 		String whereFrom=null;
 		String partnersMail=null;
+		String comments=null;
 		LocalDate queryDate=null;
 		LocalTime queryTime=null;
+		LocalDateTime nextCall=null;
 		
         cell= row.getCell(0);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
@@ -83,6 +90,12 @@ public class ExcelParser {
         }
         cell = row.getCell(1);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC)queryDate = cell.getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+       
+        cell = row.getCell(14);
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+        	nextCall = LocalDateTime.ofInstant(Instant.ofEpochMilli(cell.getDateCellValue().getTime()), ZoneOffset.UTC);
+        }    
+        
         cell = row.getCell(2);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
         	Instant instant = Instant.ofEpochMilli(cell.getDateCellValue().getTime());
@@ -90,15 +103,17 @@ public class ExcelParser {
         }       
         cell= row.getCell(4);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)promoCode = cell.getStringCellValue();
-        
-        cell= row.getCell(9);
-        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)region = cell.getStringCellValue();
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC)promoCode = String.valueOf((int)cell.getNumericCellValue());
+    //    cell= row.getCell(9);
+    //    if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)region = cell.getStringCellValue();
         cell= row.getCell(3);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)theIP = cell.getStringCellValue();
         cell= row.getCell(6);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)whereFrom = cell.getStringCellValue();;
-        System.out.println(initTel);
-        Person person = new Person(initTel, theIP, region, promoCode, whereFrom, queryTime, queryDate, partnersMail);
+        CSV CSV=new CSV();
+		String region=CSV.checkNumber(initTel);
+		String diffTime=Utils.timeZone(region);
+        Person person = new Person(initTel, theIP, promoCode, whereFrom, queryTime, queryDate, partnersMail,comments, region, diffTime, nextCall);
 		return person;
       
 	}

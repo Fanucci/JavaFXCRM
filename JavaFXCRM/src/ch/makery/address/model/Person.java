@@ -1,6 +1,7 @@
 package ch.makery.address.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import javafx.beans.property.ObjectProperty;
@@ -21,14 +22,17 @@ public class Person {
     private final SimpleStringProperty promoCode;
     private final ObjectProperty<LocalTime> queryTime;
     private final ObjectProperty<LocalDate> queryDate;
+    private final ObjectProperty<LocalDateTime> nextCall;
 	private final SimpleStringProperty whereFrom;
 	private final SimpleStringProperty partnersMail;
+	private final SimpleStringProperty comments;
+	private final SimpleStringProperty diffTime;
 
     /**
      * Default constructor.
      */
     public Person() {
-        this(null, null);
+        this(null, null, null);
     }
 
     /**
@@ -37,7 +41,7 @@ public class Person {
      * @param initTel
      * @param theIP
      */
-    public Person(String initTel, String theIP) {
+    public Person(String initTel, String theIP, LocalDateTime nextCall) {
         this.initTel = new SimpleStringProperty(initTel);
         this.theIP = new SimpleStringProperty(theIP);
 
@@ -45,22 +49,28 @@ public class Person {
         this.region = new SimpleStringProperty("some region");
         this.promoCode = new SimpleStringProperty("88889");
         this.queryTime =new SimpleObjectProperty<LocalTime>(LocalTime.of(11, 30, 12));
+        this.nextCall =new SimpleObjectProperty<LocalDateTime>(nextCall);
         this.queryDate = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
         this.whereFrom = new SimpleStringProperty("Friends");
         this.partnersMail = new SimpleStringProperty("rwe@sfdgh.ru");
+        this.comments = new SimpleStringProperty("Нет ответа");
+        this.diffTime= new SimpleStringProperty("-2");
     }
     
-    public Person(String initTel, String theIP, String region,String promoCode,String whereFrom, LocalTime queryTime, LocalDate queryDate, String partnersMail) {
+    public Person(String initTel, String theIP,String promoCode, String whereFrom,
+    		LocalTime queryTime, LocalDate queryDate, String partnersMail, String comments, String region, String diffTime, LocalDateTime nextCall) {
         this.initTel = new SimpleStringProperty(initTel);
         this.theIP = new SimpleStringProperty(theIP);
-
-        // Some initial dummy data, just for convenient testing.
         this.region =  new SimpleStringProperty(region);
         this.promoCode = new SimpleStringProperty(promoCode);
         this.queryTime =new SimpleObjectProperty<LocalTime>(queryTime);
+        this.nextCall =new SimpleObjectProperty<LocalDateTime>(nextCall);
         this.queryDate = new SimpleObjectProperty<LocalDate>(queryDate);
         this.whereFrom = new SimpleStringProperty(whereFrom);
         this.partnersMail = new SimpleStringProperty(partnersMail);
+        this.comments = new SimpleStringProperty(comments);
+        this.diffTime= new SimpleStringProperty(diffTime);
+        System.out.println(diffTime);
     }
     
 
@@ -146,5 +156,20 @@ public class Person {
 
     public StringProperty whereFromroperty() {
         return whereFrom;
+    }
+
+	public String getdiffTime() {
+		return diffTime.get();
+	}
+    public LocalDateTime getnextCall() {
+        return nextCall.get();
+    }
+
+    public void setnextCall(LocalDateTime nextCall) {
+        this.nextCall.set(nextCall);
+    }
+
+    public ObjectProperty<LocalDateTime> nextCallProperty() {
+        return nextCall;
     }
 }

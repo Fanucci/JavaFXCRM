@@ -69,42 +69,64 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
                <children>
-                  <Label layoutX="104.0" layoutY="51.0" text="Person Details" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-                  <GridPane layoutX="43.0" layoutY="104.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0">
+                  <GridPane layoutX="43.0" layoutY="104.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="24.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="40.0" vgrow="ALWAYS" />
+                      <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="40.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="40.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="40.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="40.0" vgrow="ALWAYS" />
+                      <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="40.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="40.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="40.0" vgrow="ALWAYS" />
                     </rowConstraints>
                      <children>
                         <Label text="Телефон" />
-                        <Label text="IP" GridPane.rowIndex="5" />
+                        <Label text="IP" GridPane.rowIndex="6" />
                         <Label text="Регион" GridPane.rowIndex="1" />
-                        <Label text="Время запроса" GridPane.rowIndex="2" />
-                        <Label text="Промокод" GridPane.rowIndex="4" />
-                        <Label text="Дата запроса" GridPane.rowIndex="3" />
+                        <Label text="Время запроса" GridPane.rowIndex="3" />
+                        <Label text="Промокод" GridPane.rowIndex="5" />
+                        <Label text="Дата запроса" GridPane.rowIndex="4" />
                         <Label fx:id="initTelLabel" text="Label" GridPane.columnIndex="1" />
-                        <Button fx:id="DragMeButton" mnemonicParsing="false" text="Button" GridPane.rowIndex="7" />
+                        <Button fx:id="DragMeButton" mnemonicParsing="false" style="-fx-padding: 0; -fx-background-radius: 0;" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                         <Label fx:id="regionLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="queryTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label fx:id="queryDateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label fx:id="promoCodeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label fx:id="theIPLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Label text="Откуда узнал" GridPane.rowIndex="6" />
-                        <Label fx:id="whereFromLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label fx:id="queryTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label fx:id="queryDateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label fx:id="promoCodeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label fx:id="theIPLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label text="Откуда узнал" GridPane.rowIndex="7" />
+                        <Label fx:id="whereFromLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <Label text="Имя" GridPane.columnIndex="2" />
+                        <Label text="Имя 2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text="E-mail" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label text="Комментарии" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <TextField fx:id="firstNameLabel" maxHeight="1.7976931348623157E308" style="-fx-background-radius: 0; -fx-border-radius: 0; -fx-border-width: 0; -fx-padding: 0 0 0 0;" GridPane.columnIndex="3" />
+                        <TextField layoutX="466.0" layoutY="10.0" maxHeight="1.7976931348623157E308" style="-fx-background-radius: 0; -fx-border-radius: 0; -fx-border-width: 0; -fx-padding: 0 0 0 0;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <TextField layoutX="407.0" layoutY="10.0" maxHeight="1.7976931348623157E308" style="-fx-background-radius: 0; -fx-border-radius: 0; -fx-border-width: 0; -fx-padding: 0 0 0 0;" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2147483647" />
+                        <Label text="Разница времени" GridPane.rowIndex="2" />
+                        <Label fx:id="diffTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Перезвонить" GridPane.columnIndex="4" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <children>
+                              <DatePicker fx:id="DatePick" promptText="Введите дату перезвона" />
+                              <Label text="в">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <ChoiceBox fx:id="timePick" prefWidth="150.0" />
+                              <Button minWidth="25.0" mnemonicParsing="false" text="+" />
+                           </children>
+                        </HBox>
                      </children>
                   </GridPane>
                   <ButtonBar layoutX="54.0" layoutY="250.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">

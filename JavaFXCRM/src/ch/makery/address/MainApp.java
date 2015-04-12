@@ -1,6 +1,8 @@
 package ch.makery.address;
 
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -11,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ch.makery.address.model.ExcelParser;
 import ch.makery.address.model.Person;
 import ch.makery.address.view.PersonEditDialogController;
 import ch.makery.address.view.PersonOverviewController;
@@ -24,22 +27,27 @@ public class MainApp extends Application {
     /**
      * The data as an observable list of Persons.
      */
-    private ObservableList<Person> personData = FXCollections.observableArrayList();
+    private ObservableList<Person> personDataBase = FXCollections.observableArrayList();
+    private ObservableList<String> newTels = FXCollections.observableArrayList();
+    
+
 
     /**
      * Constructor
+     * @throws IOException 
      */
-    public MainApp() {
+    public MainApp() throws IOException {
         // Add some sample data
-        personData.add(new Person("89121368647", "31.51.71.34"));
-        personData.add(new Person("89123968786", "314.511.716.324"));
-        personData.add(new Person("89192361803", "3.15.171.4"));
-        personData.add(new Person("89164896596", "Meier"));
-        personData.add(new Person("89164234566", "Meyer"));
-        personData.add(new Person("89123896444", "Kunz"));
-        personData.add(new Person("89174916437", "Best"));
-        personData.add(new Person("89169866662", "Meier"));
-        personData.add(new Person("89139601333", "35.17.123.57"));
+    	/*ObservableList<Person> newPersonData;
+    	ExcelParser excel = new ExcelParser(new File("C:\\Users\\Дмитрий\\git\\JavaFXCRM\\JavaFXCRM\\src\\база демо 26-28.12.14 - Дима.xlsx"));
+    	newPersonData=excel.readNewBase(true);
+    	newPersonList(newPersonData);*/
+    	ObservableList<Person> newPersonData = FXCollections.observableArrayList();
+    	newPersonData.add(new Person("89122849021","124.174.698.234",LocalDateTime.of(2015, 4, 16, 15, 30)));
+    	newPersonData.add(new Person("89325197769","24.74.8.24",LocalDateTime.of(2015, 4, 16, 12, 30)));
+    	newPersonData.add(new Person("89141235124","124.174.84.254",LocalDateTime.of(2015, 4, 21, 18, 00)));
+    	newPersonData.add(new Person("89256268365","12.1.84.24",null));
+    	newPersonList(newPersonData);
     }
 
     /**
@@ -47,11 +55,11 @@ public class MainApp extends Application {
      * @return
      */
     public ObservableList<Person> getPersonData() {
-        return personData;
+        return personDataBase;
     }
     
     public void addPersonData(Person person){
-    	personData.add(person);
+    	personDataBase.add(person);
     }
 
     @Override
@@ -148,10 +156,15 @@ public class MainApp extends Application {
         }
     }
 public void newPersonList(ObservableList<Person> pers){
-	personData.clear();
-	for(Person sf:pers)
-	personData.add(sf);
-	
+	personDataBase.clear();
+	for(Person sf:pers)personDataBase.add(sf);
+    for (Person s:personDataBase)
+    newTels.add(s.getinitTel());
+  
+}
+
+public ObservableList<String> getNewTelsData() {
+    return newTels;
 }
     /**
      * Returns the main stage.
