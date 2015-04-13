@@ -346,12 +346,11 @@ timePick.setItems(times);
         buildDaysOfWeek();
         buildTimes();
         buildCellGrid();
-            
+        buildCallDates();    
       
     }
-   public void addNewButton(int i, int j, Button dgfh){
-	   calendaar.getChildren().clear();
-	   initGrid();
+/*   public void addNewButton(int i, int j, Button dgfh){
+
 	   Button newButt = new Button();
        System.out.println("Column: " + i + " || Row: " + j);
        newButt.setStyle(style1);
@@ -363,10 +362,10 @@ timePick.setItems(times);
      HBox.setHgrow(newButt, Priority.ALWAYS);
      newButt.setMaxWidth(Double.MAX_VALUE);
      newButt.setMaxHeight(Double.MAX_VALUE);
-     HBox hbox1 = (HBox) dgfh.getParent();
+     HBox hbox1 = (HBox) getNodeByRowColumnIndex(i,j);
      hbox1.getChildren().addAll(newButt); 
      addClickListeners(newButt);
-   }
+   }*/
    
    
    public void addClickListeners(Button dgfh){
@@ -374,6 +373,7 @@ timePick.setItems(times);
 
            @Override
            public void handle(MouseEvent event) {
+
         	   int i = GridPane.getColumnIndex(dgfh.getParent());
         	   int j = GridPane.getRowIndex(dgfh.getParent());
    	  
@@ -396,17 +396,26 @@ timePick.setItems(times);
                
                if(button==MouseButton.PRIMARY){
               	 if(ButtText==""&&initTelLabel.getText()!=""){
-              		 addNewButton(i,j, dgfh);
-           	 
         	  getPersonByTel(initTelLabel.getText()).setnextCall(dateTime);
               LocalDate tempDatea=dateTime.toLocalDate();
               timePick.getSelectionModel().select(indexByTime(dateTime));
               if (tempDatea!=null)DatePick.setValue(tempDatea);
         	      dgfh.setText(initTelLabel.getText());  
+           	   calendaar.getChildren().clear();
+           	   initGrid();
               	 }
               	 else showPersonDetails(ButtText);
                }else if(button==MouseButton.SECONDARY){
-              	// if (ButtText!="");
+            	   if(ButtText!=""){
+            		   getPersonByTel(ButtText).setnextCall(null);
+            		   if (ButtText==initTelLabel.getText()){
+            			   DatePick.setValue(null);
+            			   timePick.getSelectionModel().select(null);
+            		   }
+            		  
+            		   calendaar.getChildren().clear();
+                   	   initGrid();
+            	   }
 
                }else if(button==MouseButton.MIDDLE){
                //as
@@ -455,18 +464,37 @@ timePick.setItems(times);
 	            addDnDlisteners(dgfh);
 	            addClickListeners(dgfh);
 	   }}
+	}
+	
+	public void buildCallDates(){
 	    newListWeek();
 		for (Person p:telsToCall){
-			 for(Node node : calendaar.getChildren()) {
+			
 			LocalDate temp = p.getnextCall().toLocalDate();
 			LocalTime temp1 = p.getnextCall().toLocalTime();
 			int i = (int) currentWeekMonday.until(temp, ChronoUnit.DAYS);
 			int j =  (int) (LocalTime.of(9,0).until(temp1, ChronoUnit.HOURS)*2);
 			if (temp1.getMinute()==30)j++;
-System.out.println(i+"||"+j);
-}
+			HBox hbox1 = (HBox) getNodeByRowColumnIndex(i+1,j+2);
+            ObservableList<Node> childrens=hbox1.getChildren();
+            Button dgfh = (Button) childrens.get(childrens.size()-1); 
+			dgfh.setText(p.getinitTel());
 
+            dgfh.setMaxWidth(Double.MAX_VALUE);
+            dgfh.setMaxHeight(Double.MAX_VALUE);
+     	   Button newButt = new Button();
+           System.out.println("Column: " + i + " || Row: " + j);
+           newButt.setStyle(style1);
+           if ((j & 1) == 1 )newButt.setStyle(style2);
+           newButt.setMaxWidth(40);
+           newButt.setMaxHeight(Double.MAX_VALUE);
+           HBox.setHgrow(dgfh, Priority.ALWAYS);
+           HBox.setHgrow(newButt, Priority.ALWAYS);
+         //  newButt.setText("+");
+           hbox1.getChildren().add(newButt);
+            addClickListeners(newButt);
 		}
+		
 	}
 	@FXML
 	private void getBack(){
@@ -497,8 +525,16 @@ System.out.println(i+"||"+j);
 			}
 			
 		}
-	for (Person p:telsToCall){
-		System.out.println(p.getnextCall());
 	}
-	}
+	 public Node getNodeByRowColumnIndex(final int column,final int row) {
+	        Node result = null;
+	        ObservableList<Node> childrens = calendaar.getChildren();
+	        for(Node node : childrens) {
+	            if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+	                result = node;
+	                break;
+	            }
+	        }
+	        return result;
+	    }
 }
