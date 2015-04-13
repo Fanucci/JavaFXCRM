@@ -15,6 +15,8 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -24,22 +26,27 @@ import javafx.scene.layout.Priority;
 
 
 
-
 public class CalendarGrid{
-	private GridPane calendaar;
+
 	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
 	  DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("d/M/yyyy H:mm");
 	  DateTimeFormatter formatterHours = DateTimeFormatter.ofPattern("H:mm");
 	  String style1="-fx-padding: 0;-fx-background-radius: 0;-fx-background-color:  #FAFAFA;-fx-border-color:  #ADADAD;-fx-border-width: 0 0.3 0 0.3;";
 	  String style2="-fx-padding: 0;-fx-background-color:  #EBF3FF;-fx-border-color:  #ADADAD;-fx-border-width: 0 0.3 0 0.3;";
+	private GridPane calendaar;
 
 	public CalendarGrid(GridPane calendar){
 		calendaar=calendar;
+	
         calendaar.setPadding(new Insets(5));
         calendaar.setHgap(0);
         calendaar.setVgap(0);
+        buildDaysOfWeek();
+        buildTimes();
+        buildCellGrid();
 	}
 public void buildDaysOfWeek(){
+	buildTimes();
 	LocalDate now = LocalDate.now();
 	LocalDate monday = LocalDate.now().with(DayOfWeek.MONDAY);
     for (int i = 0;i<5;i++){
@@ -150,4 +157,9 @@ public void addNewButton(int i, int j, Button dgfh){
   hbox1.getChildren().addAll(newButt); 
   addClickListeners(newButt);
 }
+
+
+
+
+
 }

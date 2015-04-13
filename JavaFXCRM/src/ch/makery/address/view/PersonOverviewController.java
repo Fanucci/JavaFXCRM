@@ -48,10 +48,10 @@ public class PersonOverviewController {
     @FXML
     private Button DragMeButton;
     @FXML
-    private GridPane calendaar;
+	protected GridPane calendaar;
 
    @FXML
-    private Label initTelLabel;
+   protected Label initTelLabel;
     @FXML
     private Label theIPLabel;
     @FXML
@@ -69,26 +69,29 @@ public class PersonOverviewController {
     @FXML
     private TextField firstNameLabel;
     @FXML
-    private DatePicker DatePick;
+	public DatePicker DatePick;
     @FXML
-    private ChoiceBox<String> timePick;
+	public ChoiceBox<String> timePick;
+    private MainApp mainApp;
 	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
 	  DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("d/M/yyyy H:mm");
 	  DateTimeFormatter formatterHours = DateTimeFormatter.ofPattern("H:mm");
     // Reference to the main application.
 	  
 	  
-    private MainApp mainApp;
+	  LocalDate currentWeekMonday;
 String style1="-fx-padding: 0;-fx-background-radius: 0;-fx-background-color:  #FAFAFA;-fx-border-color:  #ADADAD;-fx-border-width: 0 0.3 0 0.3;";
 String style2="-fx-padding: 0;-fx-background-color:  #EBF3FF;-fx-border-color:  #ADADAD;-fx-border-width: 0 0.3 0 0.3;";
 
 private static ObservableList<String> times=FXCollections.observableArrayList();
+private static ObservableList<String> dayNames=FXCollections.observableArrayList();
+private static ObservableList<Person> telsToCall=FXCollections.observableArrayList();
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
      */
     public PersonOverviewController() {
-
+    	  currentWeekMonday = LocalDate.now().with(DayOfWeek.MONDAY);
     }
 
     /**
@@ -106,19 +109,22 @@ private static ObservableList<String> times=FXCollections.observableArrayList();
         		hours++;
         	}
     	if (correctHour!=null){
-    		System.out.println(correctHour);
+
     		times.add(correctHour);
     	}
         }
-        System.out.println(times.get(6));
+        dayNames.add("Понедельник");
+        dayNames.add("Вторник");
+        dayNames.add("Среда");
+        dayNames.add("Четверг");
+        dayNames.add("Пятница");
     	
         // Initialize the person table with the two columns.
-
+      
         showPersonDetails("");
 
 addDnDlisteners(DragMeButton);
 timePick.setItems(times);
-initGrid();
         // Listen for selection changes and show the person details when changed.
 
         telephones.getSelectionModel().selectedItemProperty().addListener(
@@ -136,7 +142,7 @@ initGrid();
         // Add observable list data to the table
 
         telephones.setItems(mainApp.getNewTelsData());
-
+        initGrid();
     }
     
     /**
@@ -145,7 +151,7 @@ initGrid();
      * 
      * @param person the person or null
      */
-    private void showPersonDetails(String persona) {
+    public void showPersonDetails(String persona) {
         if (persona !="") {
             // Fill the labels with info from the person object.
         	Person person=getPersonByTel(persona);
@@ -336,39 +342,15 @@ initGrid();
         calendaar.setPadding(new Insets(5));
         calendaar.setHgap(0);
         calendaar.setVgap(0);
-    	LocalDate now = LocalDate.now();
-    	LocalDate monday = LocalDate.now().with(DayOfWeek.MONDAY);
-        for (int i = 0;i<5;i++){
-        	LocalDate tempDay=monday.plus(i, ChronoUnit.DAYS);
-        	  String text = tempDay.format(formatter);
-        	  System.out.println(text);
-        	  Label sr = new Label(text);
-        	  GridPane.setHalignment(sr, HPos.CENTER);
-        	  calendaar.add(sr, i+1, 1);
-        }
-        for (int j = 2;j<23;j++){
-        	 Label sr = new Label(times.get(j-2));
-        	 calendaar.add(sr, 0, j);
-             for (int i = 1;i<6;i++){
-            	 
-                 Button dgfh = new Button(); //can add text
-                 dgfh.setStyle(style1);
-                 if ((j & 1) == 1 )dgfh.setStyle(style2);
-                 dgfh.setMaxWidth(Double.MAX_VALUE);
-                 dgfh.setMaxHeight(Double.MAX_VALUE);
-                 
-                 HBox hbox1 = new HBox();
-                 HBox.setHgrow(dgfh, Priority.ALWAYS);
-                 hbox1.getChildren().add(dgfh); 
-                 calendaar.add(hbox1, i, j);
-                 addDnDlisteners(dgfh);
-                 addClickListeners(dgfh);
-        }}
+        buildDaysOfWeek();
+        buildTimes();
+        buildCellGrid();
             
       
     }
    public void addNewButton(int i, int j, Button dgfh){
-	   
+	   calendaar.getChildren().clear();
+	   initGrid();
 	   Button newButt = new Button();
        System.out.println("Column: " + i + " || Row: " + j);
        newButt.setStyle(style1);
@@ -433,4 +415,90 @@ initGrid();
       	    }
       	});
    }
+   public void buildDaysOfWeek(){
+	    for (int i = 0;i<5;i++){
+	    	
+	    	LocalDate tempDay=currentWeekMonday.plus(i, ChronoUnit.DAYS);
+	    	  String text = tempDay.format(formatter);
+	    	  Label sr = new Label(text);
+	    	  GridPane.setHalignment(sr, HPos.CENTER);
+	    	  calendaar.add(sr, i+1, 1);
+	    	  Label sr1 = new Label(dayNames.get(i));
+	    	  GridPane.setHalignment(sr1, HPos.CENTER);
+	    	  calendaar.add(sr1, i+1, 0);
+	    }
+	}
+   public void buildTimes(){
+	    for (int j = 2;j<23;j++){
+	      	 Label sr = new Label(times.get(j-2));
+	      	 calendaar.add(sr, 0, j);
+	    }
+	}
+
+	public void buildCellGrid(){
+
+	    for (int j = 2;j<23;j++){
+
+	        for (int i = 1;i<6;i++){
+	       	 
+	            Button dgfh = new Button(); //can add text
+	            dgfh.setStyle(style1);
+	            if ((j & 1) == 1 )dgfh.setStyle(style2);
+	            dgfh.setMaxWidth(Double.MAX_VALUE);
+	            dgfh.setMaxHeight(Double.MAX_VALUE);
+	            
+	            HBox hbox1 = new HBox();
+	            HBox.setHgrow(dgfh, Priority.ALWAYS);
+	            hbox1.getChildren().add(dgfh); 
+	            calendaar.add(hbox1, i, j);
+	            addDnDlisteners(dgfh);
+	            addClickListeners(dgfh);
+	   }}
+	    newListWeek();
+		for (Person p:telsToCall){
+			 for(Node node : calendaar.getChildren()) {
+			
+	                if(GridPane.getRowIndex(node) != null&& GridPane.getRowIndex(node) == 1 && GridPane.getColumnIndex(node) == i) {
+	                	str=((Label) node).getText();
+	                }
+	               if(GridPane.getRowIndex(node) != null&& GridPane.getRowIndex(node) == j && GridPane.getColumnIndex(node) == 0) {
+	            	   str= str+" "+((Label) node).getText();
+	            	  break;
+	            }}
+			System.out.println(p.getnextCall());
+		}
+	}
+	@FXML
+	private void getBack(){
+		currentWeekMonday= currentWeekMonday.minus(1, ChronoUnit.WEEKS);
+		 calendaar.getChildren().clear();
+		initGrid();
+		newListWeek();
+	}
+	@FXML
+	private void getForw(){
+		currentWeekMonday= currentWeekMonday.plus(1, ChronoUnit.WEEKS);
+		 calendaar.getChildren().clear();
+		initGrid();
+		newListWeek();
+	}
+	public void newListWeek(){
+		telsToCall.clear();
+		LocalDateTime tempDat;
+		LocalDate tempDate = null;
+		LocalDate WeekFriday=currentWeekMonday.with(DayOfWeek.FRIDAY);
+
+		for(Person p:mainApp.getPersonData()){
+			tempDat=p.getnextCall();
+			if (tempDat!=null){
+				tempDate= tempDat.toLocalDate();
+
+			if(tempDate.isAfter(currentWeekMonday)&&tempDate.isBefore(WeekFriday)||tempDate.isEqual(currentWeekMonday)||tempDate.isEqual(WeekFriday))telsToCall.add(p);
+			}
+			
+		}
+	for (Person p:telsToCall){
+		System.out.println(p.getnextCall());
+	}
+	}
 }
