@@ -3,6 +3,7 @@ package ch.makery.address.view;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -457,15 +458,14 @@ timePick.setItems(times);
 	    newListWeek();
 		for (Person p:telsToCall){
 			 for(Node node : calendaar.getChildren()) {
-			
-	                if(GridPane.getRowIndex(node) != null&& GridPane.getRowIndex(node) == 1 && GridPane.getColumnIndex(node) == i) {
-	                	str=((Label) node).getText();
-	                }
-	               if(GridPane.getRowIndex(node) != null&& GridPane.getRowIndex(node) == j && GridPane.getColumnIndex(node) == 0) {
-	            	   str= str+" "+((Label) node).getText();
-	            	  break;
-	            }}
-			System.out.println(p.getnextCall());
+			LocalDate temp = p.getnextCall().toLocalDate();
+			LocalTime temp1 = p.getnextCall().toLocalTime();
+			int i = (int) currentWeekMonday.until(temp, ChronoUnit.DAYS);
+			int j =  (int) (LocalTime.of(9,0).until(temp1, ChronoUnit.HOURS)*2);
+			if (temp1.getMinute()==30)j++;
+System.out.println(i+"||"+j);
+}
+
 		}
 	}
 	@FXML
