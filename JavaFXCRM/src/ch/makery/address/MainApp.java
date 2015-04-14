@@ -46,6 +46,7 @@ public class MainApp extends Application {
     	newPersonData.add(new Person("89122849021","124.174.698.234",LocalDateTime.of(2015, 4, 16, 15, 30)));
     	newPersonData.add(new Person("89325197769","24.74.8.24",LocalDateTime.of(2015, 4, 16, 12, 30)));
     	newPersonData.add(new Person("89141235124","124.174.84.254",LocalDateTime.of(2015, 4, 21, 18, 00)));
+    	newPersonData.add(new Person("89496239767","1.95.9.94",LocalDateTime.of(2015, 4, 16, 12, 30)));
     	newPersonData.add(new Person("89256268365","12.1.84.24",null));
     	newPersonList(newPersonData);
     }

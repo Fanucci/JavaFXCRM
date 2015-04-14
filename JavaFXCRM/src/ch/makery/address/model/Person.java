@@ -146,6 +146,18 @@ public class Person {
         return queryDate;
     }
     
+    public String getcomments() {
+        return comments.get();
+    }
+
+    public void setcomments(String comments) {
+        this.comments.set(comments);
+    }
+
+    public StringProperty commentsProperty() {
+        return comments;
+    }
+    
     public String getwhereFrom() {
         return whereFrom.get();
     }
@@ -154,7 +166,7 @@ public class Person {
         this.whereFrom.set(whereFrom);
     }
 
-    public StringProperty whereFromroperty() {
+    public StringProperty whereFromProperty() {
         return whereFrom;
     }
 

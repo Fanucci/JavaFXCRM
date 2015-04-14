@@ -34,6 +34,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.shape.Line;
 import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
 import ch.makery.address.util.DateUtil;
@@ -347,7 +348,7 @@ timePick.setItems(times);
         buildTimes();
         buildCellGrid();
         buildCallDates();    
-      
+        addTimeLine();
     }
 /*   public void addNewButton(int i, int j, Button dgfh){
 
@@ -483,7 +484,7 @@ timePick.setItems(times);
             dgfh.setMaxWidth(Double.MAX_VALUE);
             dgfh.setMaxHeight(Double.MAX_VALUE);
      	   Button newButt = new Button();
-           System.out.println("Column: " + i + " || Row: " + j);
+        //   System.out.println("Column: " + i + " || Row: " + j);
            newButt.setStyle(style1);
            if ((j & 1) == 1 )newButt.setStyle(style2);
            newButt.setMaxWidth(40);
@@ -495,6 +496,15 @@ timePick.setItems(times);
             addClickListeners(newButt);
 		}
 		
+	}
+	public void addTimeLine(){
+		Line line = new Line();
+		calendaar.getHeight();
+		int i = (int) currentWeekMonday.until(LocalDate.now(), ChronoUnit.DAYS);
+		GridPane.setRowSpan(line,GridPane.REMAINING);
+		double j =  (double) (LocalTime.now().until(LocalTime.of(9,0), ChronoUnit.MINUTES));
+		line.setTranslateY(j);
+		calendaar.add(line, i, 2);
 	}
 	@FXML
 	private void getBack(){
@@ -509,6 +519,17 @@ timePick.setItems(times);
 		 calendaar.getChildren().clear();
 		initGrid();
 		newListWeek();
+	}
+	@FXML
+	private void addNewDateButt(){
+		System.out.println(initTelLabel.getText()+"   "+DatePick.getValue()+"   "+ timePick.getSelectionModel().getSelectedItem());
+		if(initTelLabel.getText()!=""&&DatePick.getValue()!=null&&timePick.getSelectionModel().getSelectedItem()!=null){
+			LocalTime time1 = LocalTime.parse(timePick.getSelectionModel().getSelectedItem(),formatterHours);
+			getPersonByTel(initTelLabel.getText())
+			.setnextCall(LocalDateTime.of(DatePick.getValue(), time1));
+		}
+		calendaar.getChildren().clear();
+		initGrid();
 	}
 	public void newListWeek(){
 		telsToCall.clear();
