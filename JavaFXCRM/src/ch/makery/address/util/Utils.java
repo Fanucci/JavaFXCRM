@@ -18,28 +18,13 @@ import org.jsoup.select.Elements;
 public class Utils {
 	
 	
-	
-/*	public static void BubbleSort( int [ ] num )
-	{
-	     int j;
-	     boolean flag = true;   // set flag to true to begin first pass
-	     int temp;   //holding variable
-
-	     while ( flag )
-	     {
-	            flag= false;    //set flag to false awaiting a possible swap
-	            for( j=0;  j < num.length -1;  j++ )
-	            {
-	                   if ( num[ j ] < num[j+1] )   // change to > for ascending sort
-	                   {
-	                           temp = num[ j ];                //swap elements
-	                           num[ j ] = num[ j+1 ];
-	                           num[ j+1 ] = temp;
-	                          flag = true;              //shows a swap occurred 
-	                  }
-	            }
-	      }
-	} */
+public String parseNumber(String num){
+	String f3 = num.substring(1,4);
+	String l1 = num.substring(4,7);
+	String l2 = num.substring(7,9);
+	String l3 = num.substring(9,11);
+	return "+7("+f3+")"+l1+"-"+l2+"-"+l3;
+}
 	
 	public static String timeZone(String region) {
 	      if(region.contains("Калининг")||region.contains("Крым"))

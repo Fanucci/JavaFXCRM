@@ -11,6 +11,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -20,11 +21,17 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -48,12 +55,12 @@ public class PersonOverviewController {
 
 
     @FXML
-    private Button DragMeButton;
+    private Button SaveButton;
     @FXML
 	protected GridPane calendaar;
 
    @FXML
-   protected Label initTelLabel;
+   private MenuButton initTelLabel;
     @FXML
     private Label theIPLabel;
     @FXML
@@ -71,9 +78,16 @@ public class PersonOverviewController {
     @FXML
     private TextField firstNameLabel;
     @FXML
+    private TextArea commentsField;
+    @FXML
+    private TextField SearchField;
+    @FXML
 	public DatePicker DatePick;
     @FXML
 	public ChoiceBox<String> timePick;
+    
+    @FXML
+ 	public CheckBox howMany;
     private MainApp mainApp;
 	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
 	  DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("d/M/yyyy H:mm");
@@ -88,6 +102,7 @@ String style2="-fx-padding: 0;-fx-background-color:  #EBF3FF;-fx-border-color:  
 private static ObservableList<String> times=FXCollections.observableArrayList();
 private static ObservableList<String> dayNames=FXCollections.observableArrayList();
 private static ObservableList<Person> telsToCall=FXCollections.observableArrayList();
+private static ObservableList<Person> similarIP=FXCollections.observableArrayList();
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
@@ -124,8 +139,9 @@ private static ObservableList<Person> telsToCall=FXCollections.observableArrayLi
         // Initialize the person table with the two columns.
       
         showPersonDetails("");
+        initTelLabel.getItems().add(new SeparatorMenuItem());
 
-addDnDlisteners(DragMeButton);
+        //(".box:disable{: -visibility:0}")
 timePick.setItems(times);
         // Listen for selection changes and show the person details when changed.
 
@@ -157,9 +173,30 @@ timePick.setItems(times);
         if (persona !="") {
             // Fill the labels with info from the person object.
         	Person person=getPersonByTel(persona);
-        
-
             initTelLabel.setText(person.getinitTel());
+            
+            for(int i=3;i<initTelLabel.getItems().size();i++){
+            	initTelLabel.getItems().remove(i);
+            	}
+      
+           ObservableList<Person> listt= getSimilarIp(person);
+           int i=listt.size();
+           if(i>0)howMany.setSelected(true);
+           else howMany.setSelected(false);
+           howMany.setText(String.valueOf(i));
+            for (Person p:listt){
+            	MenuItem newItem=new MenuItem(p.getinitTel());
+            	initTelLabel.getItems().addAll(newItem);
+            	//-->
+            	newItem.setOnAction(new EventHandler<ActionEvent>() {
+                       @Override public void handle(ActionEvent e) {
+                    	   showPersonDetails(p.getinitTel());
+                       }
+                   });
+            	//-->
+            
+            	
+            }
             theIPLabel.setText(person.gettheIP());
             regionLabel.setText(person.getregion());
             whereFromLabel.setText(person.getwhereFrom());
@@ -167,6 +204,8 @@ timePick.setItems(times);
             diffTimeLabel.setText(person.getdiffTime());
             queryTimeLabel.setText(TimeUtil.format(person.getqueryTime()));
             queryDateLabel.setText(DateUtil.format(person.getqueryDate()));
+       //     if(person.getcomments()!=null)commentsField.setText(person.getcomments());
+        //    else commentsField.setText("");
             LocalDateTime tempDatec= person.getnextCall();
     
             if (tempDatec!=null)DatePick.setValue(tempDatec.toLocalDate());
@@ -187,32 +226,15 @@ timePick.setItems(times);
         
         }
     }
- /*   private void showPersonDetails(Person person) {
-        if (person != null) {
-            // Fill the labels with info from the person object.
-
-            initTelLabel.setText(person.getinitTel());
-            theIPLabel.setText(person.gettheIP());
-            regionLabel.setText(person.getregion());
-            whereFromLabel.setText(person.getwhereFrom());
-            promoCodeLabel.setText(person.getpromoCode());
-            diffTimeLabel.setText(person.getdiffTime());
-            queryTimeLabel.setText(TimeUtil.format(person.getqueryTime()));
-            queryDateLabel.setText(DateUtil.format(person.getqueryDate()));
-        } else {
-            // Person is null, remove all the text.
-            initTelLabel.setText("");
-            theIPLabel.setText("");
-            regionLabel.setText("");
-            whereFromLabel.setText("");
-            promoCodeLabel.setText("");
-            diffTimeLabel.setText("");
-            queryTimeLabel.setText("");
-            queryDateLabel.setText("");
-        }
-    }*/
-    
-    
+    public ObservableList<Person> getSimilarIp(Person b){
+    	String bsip=b.gettheIP();
+    	ObservableList<Person> listp= FXCollections.observableArrayList();
+    	for(Person a:mainApp.getPersonData()){
+    		if (a!=b&&a.gettheIP().equals(bsip))listp.add(a);
+    	}
+    	System.out.println(listp);
+		return listp;
+    }
     /**
      * Called when the user clicks on the delete button.
      */
@@ -530,6 +552,33 @@ timePick.setItems(times);
 		}
 		calendaar.getChildren().clear();
 		initGrid();
+	}
+	@FXML
+	private void fireSearch(){
+		String searcht = SearchField.getText();
+		for(Person p:mainApp.getPersonData()){
+			if(p.getinitTel().equals(searcht)){
+				showPersonDetails(p.getinitTel());
+				break;
+			}
+		}
+		SearchField.setText("");
+	}
+	
+	@FXML
+	private void copyToCBoard(){
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(initTelLabel.getText());
+   //     content.putHtml("<b>Some</b> text");
+        clipboard.setContent(content);
+
+	}
+	@FXML
+	private void SaveAllButt(){
+		Person saved=getPersonByTel(initTelLabel.getText());
+		saved.setcomments(commentsField.getText());
+		firstNameLabel.getText();
 	}
 	public void newListWeek(){
 		telsToCall.clear();

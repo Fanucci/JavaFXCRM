@@ -59,9 +59,6 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
-                                 <children>
-                                    <Line endX="150.0" fill="BLACK" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-                                 </children>
                               </GridPane>
                               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#getForw" text="&gt;" />
                            </children>
@@ -98,8 +95,7 @@
                         <Label text="Время запроса" GridPane.rowIndex="3" />
                         <Label text="Промокод" GridPane.rowIndex="5" />
                         <Label text="Дата запроса" GridPane.rowIndex="4" />
-                        <Label fx:id="initTelLabel" text="Label" GridPane.columnIndex="1" />
-                        <Button fx:id="DragMeButton" mnemonicParsing="false" style="-fx-padding: 0; -fx-background-radius: 0;" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <Button fx:id="SaveButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#SaveAllButt" style="-fx-padding: 0; -fx-background-radius: 0;" text="Сохранить" GridPane.columnIndex="5" GridPane.rowIndex="4" />
                         <Label fx:id="regionLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="queryTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label fx:id="queryDateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -114,11 +110,11 @@
                         <TextField fx:id="firstNameLabel" maxHeight="1.7976931348623157E308" style="-fx-background-radius: 0; -fx-border-radius: 0; -fx-border-width: 0; -fx-padding: 0 0 0 0;" GridPane.columnIndex="3" />
                         <TextField layoutX="466.0" layoutY="10.0" maxHeight="1.7976931348623157E308" style="-fx-background-radius: 0; -fx-border-radius: 0; -fx-border-width: 0; -fx-padding: 0 0 0 0;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <TextField layoutX="407.0" layoutY="10.0" maxHeight="1.7976931348623157E308" style="-fx-background-radius: 0; -fx-border-radius: 0; -fx-border-width: 0; -fx-padding: 0 0 0 0;" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2147483647" />
+                        <TextArea fx:id="commentsField" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2147483647" />
                         <Label text="Разница времени" GridPane.rowIndex="2" />
                         <Label fx:id="diffTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="Перезвонить" GridPane.columnIndex="4" />
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <children>
                               <DatePicker fx:id="DatePick" promptText="Введите дату перезвона" />
                               <Label text="в">
@@ -126,10 +122,25 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <ChoiceBox fx:id="timePick" prefWidth="150.0" />
+                              <ChoiceBox fx:id="timePick" />
                               <Button minWidth="25.0" mnemonicParsing="false" onAction="#addNewDateButt" text="+" />
                            </children>
                         </HBox>
+                        <MenuButton fx:id="initTelLabel" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="8(912)2849021" GridPane.columnIndex="1">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#fireSearch" text="Найти номер">
+                                 <graphic>
+                                    <TextField fx:id="SearchField" />
+                                 </graphic>
+                              </MenuItem>
+                            <MenuItem mnemonicParsing="false" onAction="#copyToCBoard" text="Скопировать в буфер" />
+                          </items>
+                           <graphic>
+                              <CheckBox fx:id="howMany" disable="true" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" selected="true" style="-fx-opacity: 1;" text="0" />
+                           </graphic>
+                        </MenuButton>
+                        <Label text="Статус" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <ChoiceBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="10.0" prefWidth="150.0" style="-fx-padding: 0;" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                   <ButtonBar layoutX="54.0" layoutY="250.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
