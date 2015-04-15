@@ -158,13 +158,14 @@ public class MainApp extends Application {
         }
     }
 public void newPersonList(ObservableList<Person> pers){
-	personDataBase.clear();
+	newTels.clear();
 	for(Person sf:pers)personDataBase.add(sf);
-    for (Person s:personDataBase)
-    newTels.add(s.getinitTel());
+    for (Person s:personDataBase)newTels.add(s.getinitTel());
   
 }
-
+public void oldPersonList(ObservableList<Person> pers){
+	for(Person sf:pers)personDataBase.add(sf);
+}
 public ObservableList<String> getNewTelsData() {
     return newTels;
 }

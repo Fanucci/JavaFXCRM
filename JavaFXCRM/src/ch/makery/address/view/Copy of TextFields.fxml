@@ -25,7 +25,12 @@
                         </AnchorPane>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#getBack" text="&lt;" />
+                              <VBox>
+                                 <children>
+                                    <Button maxHeight="50.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#getToday" style="-fx-padding: 0;" text="Сегодня" VBox.vgrow="ALWAYS" />
+                                    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#getBack" text="&lt;" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
                               <GridPane fx:id="calendaar" HBox.hgrow="ALWAYS">
                                 <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" prefWidth="100.0" />
@@ -60,7 +65,12 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                               </GridPane>
-                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#getForw" text="&gt;" />
+                              <VBox>
+                                 <children>
+                                    <Button maxHeight="50.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#getToday" style="-fx-padding: 0;" text="Сегодня" VBox.vgrow="ALWAYS" />
+                                    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#getForw" text="&gt;" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
                            </children>
                         </HBox>
                     </items>

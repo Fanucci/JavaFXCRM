@@ -46,6 +46,7 @@ import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
 import ch.makery.address.util.DateUtil;
 import ch.makery.address.util.TimeUtil;
+import ch.makery.address.util.Utils;
 
 public class PersonOverviewController {
   Person superPerson;
@@ -129,6 +130,9 @@ private static ObservableList<Person> telsToCall=FXCollections.observableArrayLi
     		times.add(correctHour);
     	}
         }
+        calendaar.setPadding(new Insets(5));
+        calendaar.setHgap(0);
+        calendaar.setVgap(0);
         dayNames.add("Понедельник");
         dayNames.add("Вторник");
         dayNames.add("Среда");
@@ -173,7 +177,8 @@ timePick.setItems(times);
             // Fill the labels with info from the person object.
         	Person person=getPersonByTel(persona);
             initTelLabel.setText(person.getinitTel());
-            
+
+
             for(int i=3;i<initTelLabel.getItems().size();i++){
             	initTelLabel.getItems().remove(i);
             	}
@@ -212,6 +217,7 @@ timePick.setItems(times);
            
             if (tempDatec!=null)timePick.getSelectionModel().select(indexByTime(tempDatec));
             else timePick.getSelectionModel().select(null);
+            commentsField.setText(person.getcomments());
         } else {
             // Person is null, remove all the text.
             initTelLabel.setText("");
@@ -229,7 +235,8 @@ timePick.setItems(times);
     	String bsip=b.gettheIP();
     	ObservableList<Person> listp= FXCollections.observableArrayList();
     	for(Person a:mainApp.getPersonData()){
-    		if (a!=b&&a.gettheIP().equals(bsip))listp.add(a);
+    		String aIP=a.gettheIP();
+    		if (a!=b&&aIP!=null&&aIP.equals(bsip))listp.add(a);
     	}
 		return listp;
     }
@@ -361,9 +368,6 @@ timePick.setItems(times);
     }
     
     public void initGrid(){
-        calendaar.setPadding(new Insets(5));
-        calendaar.setHgap(0);
-        calendaar.setVgap(0);
         buildDaysOfWeek();
         buildTimes();
         buildCellGrid();
@@ -487,14 +491,13 @@ timePick.setItems(times);
             dgfh.setMaxWidth(Double.MAX_VALUE);
             dgfh.setMaxHeight(Double.MAX_VALUE);
      	   Button newButt = new Button();
-        //   System.out.println("Column: " + i + " || Row: " + j);
            newButt.setStyle(style1);
            if ((j & 1) == 1 )newButt.setStyle(style2);
            newButt.setMaxWidth(40);
+           newButt.setMinWidth(15);
            newButt.setMaxHeight(Double.MAX_VALUE);
            HBox.setHgrow(dgfh, Priority.ALWAYS);
            HBox.setHgrow(newButt, Priority.ALWAYS);
-         //  newButt.setText("+");
            hbox1.getChildren().add(newButt);
             addClickListeners(newButt);
 		}
@@ -503,16 +506,22 @@ timePick.setItems(times);
 	public void addTimeLine(){
 		int i = (int) currentWeekMonday.until(LocalDate.now(), ChronoUnit.DAYS);
 		if (i<6&&i>-1){
-		if(LocalTime.now().isAfter(LocalTime.of(9,0))&&LocalTime.now().isBefore(LocalTime.of(18,0))){
+		if(LocalTime.now().isAfter(LocalTime.of(9,0))&&LocalTime.now().isBefore(LocalTime.of(19,0))){
 	
 		Line line = new Line();
-		line.setEndX(170);
+		line.setEndX(261);
+		line.setStrokeWidth(2);
 		calendaar.getHeight();
 		
 		
 		GridPane.setRowSpan(line,GridPane.REMAINING);
-		double j =  (double) (LocalTime.now().until(LocalTime.of(9,0), ChronoUnit.MINUTES));
+		double j =  (double) ChronoUnit.MINUTES.between(LocalTime.of(9,0), LocalTime.now());
+		//double j =  (double) (LocalTime.now().until(LocalTime.of(18,0), ChronoUnit.MINUTES));
+		System.out.println(j);
+	
+		j = Utils.scale(j, 0, 600, 0, 220);
 		line.setTranslateY(j);
+		System.out.println(j);
 		calendaar.add(line, i+1, 2);
 		}
 		}
@@ -530,6 +539,13 @@ timePick.setItems(times);
 		 calendaar.getChildren().clear();
 		initGrid();
 		//newListWeek();
+	}
+	
+	@FXML
+	private void getToday(){
+		currentWeekMonday= LocalDate.now().with(DayOfWeek.MONDAY);
+		 calendaar.getChildren().clear();
+		initGrid();
 	}
 	@FXML
 	private void addNewDateButt(){
@@ -566,6 +582,7 @@ timePick.setItems(times);
 	@FXML
 	private void SaveAllButt(){
 		Person saved=getPersonByTel(initTelLabel.getText());
+		System.out.println(commentsField.getText());
 		saved.setcomments(commentsField.getText());
 		firstNameLabel.getText();
 	}
@@ -596,4 +613,14 @@ timePick.setItems(times);
 	        }
 	        return result;
 	    }
+/*	 scene.widthProperty().addListener(new ChangeListener<Number>() {
+		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+		        System.out.println("Width: " + newSceneWidth);
+		    }
+		});
+		scene.heightProperty().addListener(new ChangeListener<Number>() {
+		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+		        System.out.println("Height: " + newSceneHeight);
+		    }
+		});*/
 }

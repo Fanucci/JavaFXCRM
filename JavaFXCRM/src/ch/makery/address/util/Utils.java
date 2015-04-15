@@ -17,7 +17,9 @@ import org.jsoup.select.Elements;
 
 public class Utils {
 	
-	
+    public static double scale(final double valueIn, final double baseMin, final double baseMax, final double limitMin, final double limitMax) {
+        return ((limitMax - limitMin) * (valueIn - baseMin) / (baseMax - baseMin)) + limitMin;
+    }
 public String parseNumber(String num){
 	String f3 = num.substring(1,4);
 	String l1 = num.substring(4,7);
