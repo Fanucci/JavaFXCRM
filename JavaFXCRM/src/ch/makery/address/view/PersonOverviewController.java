@@ -102,7 +102,6 @@ String style2="-fx-padding: 0;-fx-background-color:  #EBF3FF;-fx-border-color:  
 private static ObservableList<String> times=FXCollections.observableArrayList();
 private static ObservableList<String> dayNames=FXCollections.observableArrayList();
 private static ObservableList<Person> telsToCall=FXCollections.observableArrayList();
-private static ObservableList<Person> similarIP=FXCollections.observableArrayList();
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
@@ -232,7 +231,6 @@ timePick.setItems(times);
     	for(Person a:mainApp.getPersonData()){
     		if (a!=b&&a.gettheIP().equals(bsip))listp.add(a);
     	}
-    	System.out.println(listp);
 		return listp;
     }
     /**
@@ -372,23 +370,6 @@ timePick.setItems(times);
         buildCallDates();    
         addTimeLine();
     }
-/*   public void addNewButton(int i, int j, Button dgfh){
-
-	   Button newButt = new Button();
-       System.out.println("Column: " + i + " || Row: " + j);
-       newButt.setStyle(style1);
-       if ((j & 1) == 1 )newButt.setStyle(style2);
-       
-     dgfh.setMaxWidth(Double.MAX_VALUE);
-     newButt.setMaxWidth(10);
-     HBox.setHgrow(dgfh, Priority.ALWAYS);
-     HBox.setHgrow(newButt, Priority.ALWAYS);
-     newButt.setMaxWidth(Double.MAX_VALUE);
-     newButt.setMaxHeight(Double.MAX_VALUE);
-     HBox hbox1 = (HBox) getNodeByRowColumnIndex(i,j);
-     hbox1.getChildren().addAll(newButt); 
-     addClickListeners(newButt);
-   }*/
    
    
    public void addClickListeners(Button dgfh){
@@ -520,27 +501,35 @@ timePick.setItems(times);
 		
 	}
 	public void addTimeLine(){
-		Line line = new Line();
-		calendaar.getHeight();
 		int i = (int) currentWeekMonday.until(LocalDate.now(), ChronoUnit.DAYS);
+		if (i<6&&i>-1){
+		if(LocalTime.now().isAfter(LocalTime.of(9,0))&&LocalTime.now().isBefore(LocalTime.of(18,0))){
+	
+		Line line = new Line();
+		line.setEndX(170);
+		calendaar.getHeight();
+		
+		
 		GridPane.setRowSpan(line,GridPane.REMAINING);
 		double j =  (double) (LocalTime.now().until(LocalTime.of(9,0), ChronoUnit.MINUTES));
 		line.setTranslateY(j);
-		calendaar.add(line, i, 2);
+		calendaar.add(line, i+1, 2);
+		}
+		}
 	}
 	@FXML
 	private void getBack(){
 		currentWeekMonday= currentWeekMonday.minus(1, ChronoUnit.WEEKS);
 		 calendaar.getChildren().clear();
 		initGrid();
-		newListWeek();
+		//newListWeek();
 	}
 	@FXML
 	private void getForw(){
 		currentWeekMonday= currentWeekMonday.plus(1, ChronoUnit.WEEKS);
 		 calendaar.getChildren().clear();
 		initGrid();
-		newListWeek();
+		//newListWeek();
 	}
 	@FXML
 	private void addNewDateButt(){
