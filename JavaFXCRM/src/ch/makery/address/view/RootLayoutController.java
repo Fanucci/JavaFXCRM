@@ -84,7 +84,20 @@ public class RootLayoutController {
                 mainApp.newPersonList(newPersonData);
                 }
                 }
-
+    @FXML
+    private void openOldBase() throws IOException {
+        fileChooser.setTitle("Открыть старую базу");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XLSX", "*.XLSX"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home"))); 
+                File file = fileChooser.showOpenDialog(dialogStage);
+                if (file != null) {
+                	ExcelParser excel = new ExcelParser(file);
+                	newPersonData=excel.readNewBase(false);
+                System.out.println(file);
+              //  System.out.println(newPersonData);
+                mainApp.oldPersonList(newPersonData);
+                }
+    }
 	public void setMainApp(MainApp mainApp) {
 		// TODO Auto-generated method stub
 	    this.mainApp = mainApp;

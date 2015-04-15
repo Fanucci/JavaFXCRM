@@ -71,7 +71,7 @@ public class ExcelParser {
         row = rowIterator.next();
 	}
 	
-	public Person readRow(Row row) throws UnsupportedEncodingException, IOException{
+	public Person readRow(Row row, boolean isNew) throws UnsupportedEncodingException, IOException{
 		String initTel=null;
 		String theIP=null;
 
@@ -82,7 +82,8 @@ public class ExcelParser {
 		LocalDate queryDate=null;
 		LocalTime queryTime=null;
 		LocalDateTime nextCall=null;
-		
+		String region=null;
+		String diffTime=null;
         cell= row.getCell(0);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
 
@@ -109,10 +110,19 @@ public class ExcelParser {
         cell= row.getCell(3);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)theIP = cell.getStringCellValue();
         cell= row.getCell(6);
-        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)whereFrom = cell.getStringCellValue();;
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)whereFrom = cell.getStringCellValue();
         CSV CSV=new CSV();
-		String region=CSV.checkNumber(initTel);
-		String diffTime=Utils.timeZone(region);
+        //Region
+        if(isNew)region= CSV.checkNumber(initTel);
+        else{cell= row.getCell(9);
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)region = cell.getStringCellValue();
+        }
+        //Time Difference
+        if(isNew)diffTime=Utils.timeZone(region);
+        else{cell= row.getCell(10);
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)diffTime = cell.getStringCellValue();
+        }
+        
         Person person = new Person(initTel, theIP, promoCode, whereFrom, queryTime, queryDate, partnersMail,comments, region, diffTime, nextCall);
 		return person;
       
@@ -124,13 +134,12 @@ public class ExcelParser {
         	while (rowIterator.hasNext()){
         	moveOneRow();
         	rowsCur++;
-        	if(isNew)cell = row.getCell(0, Row.RETURN_BLANK_AS_NULL);
-        	else cell = row.getCell(14, Row.RETURN_BLANK_AS_NULL);
-            if (cell!=null) newList.add(readRow(row));
-                
+        	cell = row.getCell(0, Row.RETURN_BLANK_AS_NULL);
+            if (cell!=null) newList.add(readRow(row,isNew));
                         	}
         	return newList;
         }	
+        
         catch (Exception e){e.printStackTrace();return null;}
         
     }
