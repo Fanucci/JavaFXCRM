@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -511,18 +512,19 @@ timePick.setItems(times);
 		Line line = new Line();
 		line.setEndX(261);
 		line.setStrokeWidth(2);
-		calendaar.getHeight();
+		GridPane.setValignment(line, VPos.TOP);
 		
-		
-		GridPane.setRowSpan(line,GridPane.REMAINING);
-		double j =  (double) ChronoUnit.MINUTES.between(LocalTime.of(9,0), LocalTime.now());
-		//double j =  (double) (LocalTime.now().until(LocalTime.of(18,0), ChronoUnit.MINUTES));
-		System.out.println(j);
-	
-		j = Utils.scale(j, 0, 600, 0, 220);
-		line.setTranslateY(j);
-		System.out.println(j);
-		calendaar.add(line, i+1, 2);
+		int j =  (int) (LocalTime.of(9,0).until(LocalTime.now(), ChronoUnit.HOURS)*2);
+		if (LocalTime.now().getMinute()>=30)j++;
+	//	GridPane.setRowSpan(line,GridPane.REMAINING);
+	//	double j =  (double) ChronoUnit.MINUTES.between(LocalTime.of(9,0), LocalTime.now());
+	//	double j =  (double) (LocalTime.now().until(LocalTime.of(18,0), ChronoUnit.MINUTES));
+		double k=LocalTime.now().getMinute();
+		if (LocalTime.now().getMinute()>=30)k=k-30;
+	//	k =  Utils.scale(k, 0, LocalTime.now().getMinute(), 0, 32);
+		System.out.println(1+k*0.85);
+		line.setTranslateY(k*0.85);
+		calendaar.add(line, i+1, j+2);
 		}
 		}
 	}
