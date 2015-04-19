@@ -12,8 +12,8 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#openNewBase" text="Открыть новую базу.." />
-                  <MenuItem mnemonicParsing="false" onAction="#openOldBase" text="Открыть старую базу" />
-              <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" onAction="#openOldBase" text="Открыть старую базу.." />
+              <MenuItem mnemonicParsing="false" onAction="#saveChanges" text="Сохранить" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

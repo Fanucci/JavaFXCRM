@@ -44,6 +44,7 @@ public class RootLayoutController {
 	private Stage dialogStage;
 	ObservableList<Person> newPersonData;
 	private MainApp mainApp;
+	File rememberNew;
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -76,6 +77,7 @@ public class RootLayoutController {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XLSX", "*.XLSX"));
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home"))); 
                 File file = fileChooser.showOpenDialog(dialogStage);
+                rememberNew=file;
                 if (file != null) {
                 	ExcelParser excel = new ExcelParser(file);
                 	newPersonData=excel.readNewBase(true);
@@ -98,6 +100,13 @@ public class RootLayoutController {
                 mainApp.oldPersonList(newPersonData);
                 }
     }
+    
+    @FXML
+    private void saveChanges() throws IOException{
+    	ExcelParser excel = new ExcelParser(rememberNew);
+    	excel.writeNewBase(mainApp.getTelsPers(),true);
+    }
+    
 	public void setMainApp(MainApp mainApp) {
 		// TODO Auto-generated method stub
 	    this.mainApp = mainApp;

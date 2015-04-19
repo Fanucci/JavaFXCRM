@@ -20,11 +20,13 @@ public class Person {
     private final StringProperty theIP;
     private final StringProperty region;
     private final SimpleStringProperty promoCode;
-    private final ObjectProperty<LocalTime> queryTime;
+    private final SimpleStringProperty queryTime;
     private final ObjectProperty<LocalDate> queryDate;
     private final ObjectProperty<LocalDateTime> nextCall;
 	private final SimpleStringProperty whereFrom;
-	private final SimpleStringProperty partnersMail;
+	private final SimpleStringProperty name1;
+	private final SimpleStringProperty eMail;
+	private final SimpleStringProperty status;
 	private final SimpleStringProperty comments;
 	private final SimpleStringProperty diffTime;
 
@@ -48,29 +50,33 @@ public class Person {
         // Some initial dummy data, just for convenient testing.
         this.region = new SimpleStringProperty("some region");
         this.promoCode = new SimpleStringProperty("88889");
-        this.queryTime =new SimpleObjectProperty<LocalTime>(LocalTime.of(11, 30, 12));
+        this.queryTime =new SimpleStringProperty("15:50:21");
         this.nextCall =new SimpleObjectProperty<LocalDateTime>(nextCall);
         this.queryDate = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
         this.whereFrom = new SimpleStringProperty("Friends");
-        this.partnersMail = new SimpleStringProperty("rwe@sfdgh.ru");
+        this.name1 = new SimpleStringProperty("Алексей");
+        this.eMail = new SimpleStringProperty("ryesh@sdfhgngkkyuert.ru");
+        this.status = new SimpleStringProperty("3");
         this.comments = new SimpleStringProperty("Нет ответа");
         this.diffTime= new SimpleStringProperty("-2");
     }
     
     public Person(String initTel, String theIP,String promoCode, String whereFrom,
-    		LocalTime queryTime, LocalDate queryDate, String partnersMail, String comments, String region, String diffTime, LocalDateTime nextCall) {
+    		String queryTime, LocalDate queryDate, String name1, String comments, 
+    		String region, String diffTime, LocalDateTime nextCall, String eMail, String status) {
         this.initTel = new SimpleStringProperty(initTel);
         this.theIP = new SimpleStringProperty(theIP);
         this.region =  new SimpleStringProperty(region);
         this.promoCode = new SimpleStringProperty(promoCode);
-        this.queryTime =new SimpleObjectProperty<LocalTime>(queryTime);
+        this.queryTime =new SimpleStringProperty(queryTime);
         this.nextCall =new SimpleObjectProperty<LocalDateTime>(nextCall);
         this.queryDate = new SimpleObjectProperty<LocalDate>(queryDate);
         this.whereFrom = new SimpleStringProperty(whereFrom);
-        this.partnersMail = new SimpleStringProperty(partnersMail);
+        this.name1 = new SimpleStringProperty(name1);
+        this.eMail = new SimpleStringProperty(eMail);
+        this.status = new SimpleStringProperty(status);
         this.comments = new SimpleStringProperty(comments);
         this.diffTime= new SimpleStringProperty(diffTime);
-        System.out.println(diffTime);
     }
     
 
@@ -122,15 +128,46 @@ public class Person {
         return promoCode;
     }
 
-    public LocalTime getqueryTime() {
+    public String geteMail() {
+        return eMail.get();
+    }
+    public void seteMail(String eMail) {
+        this.eMail.set(eMail);
+    }
+    public SimpleStringProperty eMailProperty() {
+        return eMail;
+    }
+    
+    public String getname1() {
+        return name1.get();
+    }
+    public void setname1(String name1) {
+        this.name1.set(name1);
+    }
+    public SimpleStringProperty name1Property() {
+        return name1;
+    }
+    
+    public String getstatus() {
+        return status.get();
+    }
+    public void setstatus(String status) {
+        this.status.set(status);
+    }
+    public SimpleStringProperty statusProperty() {
+        return status;
+    }
+    
+    
+    public String getqueryTime() {
         return queryTime.get();
     }
 
-    public void setqueryTime(LocalTime queryTime) {
+    public void setqueryTime(String queryTime) {
         this.queryTime.set(queryTime);
     }
 
-    public ObjectProperty<LocalTime> queryTimeProperty() {
+    public SimpleStringProperty queryTimeProperty() {
         return queryTime;
     }
 

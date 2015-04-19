@@ -77,12 +77,15 @@ public class ExcelParser {
 
 		String promoCode=null;
 		String whereFrom=null;
-		String partnersMail=null;
+		String name1=null;
+		String eMail=null;
 		String comments=null;
+		String status=null;
 		LocalDate queryDate=null;
-		LocalTime queryTime=null;
+		String queryTime=null;
 		LocalDateTime nextCall=null;
 		String region=null;
+		
 		String diffTime=null;
         cell= row.getCell(0);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
@@ -97,20 +100,31 @@ public class ExcelParser {
         	nextCall = LocalDateTime.ofInstant(Instant.ofEpochMilli(cell.getDateCellValue().getTime()), ZoneOffset.UTC);
         }    
         
-        cell = row.getCell(2);
-        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
-        	Instant instant = Instant.ofEpochMilli(cell.getDateCellValue().getTime());
-        	queryTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalTime();
-        }       
+        cell = row.getCell(7);
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING){
+        	queryTime = cell.getStringCellValue().substring(11,19);
+        } 
+        else{
+        	cell = row.getCell(2);
+        	if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+        	queryTime="[["+format2.format(cell.getDateCellValue())+"]]";
+        	}}       	
         cell= row.getCell(4);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)promoCode = cell.getStringCellValue();
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC)promoCode = String.valueOf((int)cell.getNumericCellValue());
-    //    cell= row.getCell(9);
-    //    if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)region = cell.getStringCellValue();
-        cell= row.getCell(3);
-        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)theIP = cell.getStringCellValue();
         cell= row.getCell(6);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)whereFrom = cell.getStringCellValue();
+        
+        cell= row.getCell(3);
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)theIP = cell.getStringCellValue();
+        cell= row.getCell(5);
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)comments = cell.getStringCellValue();
+        cell= row.getCell(12);
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)comments = cell.getStringCellValue();
+        cell= row.getCell(13);
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)eMail = cell.getStringCellValue();
+        cell= row.getCell(11);
+        if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)status = cell.getStringCellValue();
         CSV CSV=new CSV();
         //Region
         if(isNew)region= CSV.checkNumber(initTel);
@@ -123,29 +137,48 @@ public class ExcelParser {
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_STRING)diffTime = cell.getStringCellValue();
         }
         
-        Person person = new Person(initTel, theIP, promoCode, whereFrom, queryTime, queryDate, partnersMail,comments, region, diffTime, nextCall);
+        Person person = new Person(initTel, theIP, promoCode, whereFrom, queryTime,
+        		queryDate, name1 ,comments, region, diffTime, nextCall, eMail, status);
 		return person;
       
 	}
 	
-	public ObservableList<Person> readNewBase(boolean isNew) {
-        try
-        {
+    private void writeRow(Row row,Person p, boolean isNew) {
+    	row.createCell(12).setCellValue(p.getcomments());
+    	row.createCell(13).setCellValue(p.geteMail());
+    	row.createCell(11).setCellValue(p.getstatus());
+    	row.createCell(9).setCellValue(p.getregion());
+    	row.createCell(10).setCellValue(p.getdiffTime());
+	
+}
+	public ObservableList<Person> readNewBase(boolean isNew) throws UnsupportedEncodingException, IOException {
+
         	while (rowIterator.hasNext()){
         	moveOneRow();
         	rowsCur++;
         	cell = row.getCell(0, Row.RETURN_BLANK_AS_NULL);
             if (cell!=null) newList.add(readRow(row,isNew));
-                        	}
+            }
         	return newList;
-        }	
-        
-        catch (Exception e){e.printStackTrace();return null;}
-        
+
     }
-        public void saveFile() throws IOException{
+	
+	public void writeNewBase(ObservableList<Person>LP, boolean isNew) throws IOException {
+    	while (rowIterator.hasNext()){
+    	moveOneRow();
+    	Person PLine=LP.get(rowsCur);
+    	rowsCur++;
+    	cell = row.getCell(0, Row.RETURN_BLANK_AS_NULL);
+        if (cell!=null) writeRow(row,PLine,isNew);
+        }
+    	saveFile();
+	}
+
+
+
+		public void saveFile() throws IOException{
             file.close();
-            String name = file1.getName().substring(0,file1.getName().lastIndexOf(".xlsx"))+"+регионы.xlsx";
+            String name = file1.getName().substring(0,file1.getName().lastIndexOf(".xlsx"))+"+изменения.xlsx";
             
             String absolutePath = file1.getAbsolutePath();
     	    String filePath = absolutePath.
@@ -161,4 +194,7 @@ public class ExcelParser {
         	Person person=job.readNewBase(true).get(14);
         	System.out.println(person.getinitTel()+"   ||   "+person.getpromoCode());
         }
+
+
+
 }

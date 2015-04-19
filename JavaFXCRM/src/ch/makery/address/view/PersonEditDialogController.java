@@ -63,7 +63,7 @@ public class PersonEditDialogController {
         theIPField.setText(person.gettheIP());
         regionField.setText(person.getregion());
         promoCodeField.setText(person.getpromoCode());
-        queryTimeField.setText(TimeUtil.format(person.getqueryTime()));
+        queryTimeField.setText(person.getqueryTime());
         queryDateField.setText(DateUtil.format(person.getqueryDate()));
         queryDateField.setPromptText("dd.mm.yyyy");
     }
@@ -87,7 +87,7 @@ public class PersonEditDialogController {
             person.settheIP(theIPField.getText());
             person.setregion(regionField.getText());
             person.setpromoCode(promoCodeField.getText());
-            person.setqueryTime(TimeUtil.parse(queryTimeField.getText()));
+            person.setqueryTime(queryTimeField.getText());
             person.setqueryDate(DateUtil.parse(queryDateField.getText()));
 
             okClicked = true;

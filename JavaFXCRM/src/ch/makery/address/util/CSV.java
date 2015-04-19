@@ -8,15 +8,17 @@ import au.com.bytecode.opencsv.CSVReader;
  
 public class CSV {
      static String CodePath = "C:\\Users\\ִלטענטי\\git\\JavaFXCRM\\JavaFXCRM\\src\\Kody.csv";
+     FileReader FR;
      static CSVReader reader;
 	public static void changeCodes(File file2){
     	CodePath = file2.getPath();
 	}
 	public CSV() throws FileNotFoundException{
-		reader = new CSVReader(new FileReader(CodePath),';');
+		FR= new FileReader(CodePath);
+		
 	}
     	public String checkNumber(String num) throws NumberFormatException, IOException{
-        
+    		reader = new CSVReader(FR,';');
             
             String dig3 = num.substring(1,4);
             int dig7 = Integer.parseInt(num.substring(4,11));
@@ -24,8 +26,8 @@ public class CSV {
             //Read one line at a time
             while ((nextLine = reader.readNext()) != null)
             {
-                for(@SuppressWarnings("unused") String token : nextLine)
-                {
+          //      for(@SuppressWarnings("unused") String token : nextLine)
+          //      {
                 	
                 	 if (dig3.equals(nextLine[0])){
                 		 
@@ -33,12 +35,11 @@ public class CSV {
                 	
                 		if( dig7<Integer.parseInt(nextLine[2])){
                 			return nextLine[5];
-                		 //return nextLine[1]+"-"+nextLine[2]+" in "+nextLine[5];
                 			
                 		}}
                 	 }
                 }
-            }
+         //   }
 
 
 		return "no";

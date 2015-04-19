@@ -7,7 +7,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,6 +27,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -54,47 +58,28 @@ public class PersonOverviewController {
 
     @FXML
     private ListView<String> telephones;
-
-
     @FXML
     private Button SaveButton;
     @FXML
 	protected GridPane calendaar;
-
-   @FXML
-   private MenuButton initTelLabel;
     @FXML
-    private Label theIPLabel;
+    private MenuButton initTelLabel;
     @FXML
-    private Label regionLabel;
+    private Label theIPLabel,regionLabel,whereFromLabel,promoCodeLabel,queryTimeLabel,queryDateLabel,diffTimeLabel;
     @FXML
-    private Label whereFromLabel;
-    @FXML
-    private Label promoCodeLabel;
-    @FXML
-    private Label queryTimeLabel;
-    @FXML
-    private Label queryDateLabel;
-    @FXML
-    private Label diffTimeLabel;
-    @FXML
-    private TextField firstNameLabel;
+    private TextField firstNameLabel,SearchField,eMailField;
     @FXML
     private TextArea commentsField;
     @FXML
-    private TextField SearchField;
-    @FXML
 	public DatePicker DatePick;
     @FXML
-	public ChoiceBox<String> timePick;
-    
+	public ChoiceBox<String> timePick,statusField;
     @FXML
  	public CheckBox howMany;
     private MainApp mainApp;
 	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
 	  DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("d/M/yyyy H:mm");
 	  DateTimeFormatter formatterHours = DateTimeFormatter.ofPattern("H:mm");
-    // Reference to the main application.
 	  
 	  
 	  LocalDate currentWeekMonday;
@@ -102,6 +87,7 @@ String style1="-fx-padding: 0;-fx-background-radius: 0;-fx-background-color:  #F
 String style2="-fx-padding: 0;-fx-background-color:  #EBF3FF;-fx-border-color:  #ADADAD;-fx-border-width: 0 0.3 0 0.3;";
 
 private static ObservableList<String> times=FXCollections.observableArrayList();
+private static ObservableList<String> statuses=FXCollections.observableArrayList();
 private static ObservableList<String> dayNames=FXCollections.observableArrayList();
 private static ObservableList<Person> telsToCall=FXCollections.observableArrayList();
     /**
@@ -110,6 +96,28 @@ private static ObservableList<Person> telsToCall=FXCollections.observableArrayLi
      */
     public PersonOverviewController() {
     	  currentWeekMonday = LocalDate.now().with(DayOfWeek.MONDAY);
+         	int hours = 9;
+        	String correctHour = null;
+            for (int j = 2;j<23;j++){
+            	if ((j & 1) != 1 )correctHour = hours+":00";
+            	else {
+            		correctHour=hours+":30";
+            		hours++;
+            	}
+        	if (correctHour!=null){
+
+        		times.add(correctHour);
+        	}
+            }
+            statuses.add("1. Пользуются демкой (периодически, не собираются платить, хватает данных)");
+            statuses.add("2. Разово (нужна была выписка, информация по одной компании, по директору, "
+            		+ "посмотрели для интереса, проверка не требуется, постоянные контрагенты)");
+            statuses.add("3. Не удалось связаться (недоступен, сбрасывает, постоянно занято, номер не существует – те случаи, когда не было разговора)");
+            statuses.add("4. Отказался разговаривать (бросил трубку, попросил перезвонить-потом не ответил, попросил перезвонить)");
+            statuses.add("5. Не знают, что за системе (дети, бабушку, автосалоны, нужно было мужу, коллеге, знакомому, не знают, что за система)");
+            statuses.add("6. В работе (заинтересованные)");
+            statuses.add("7. Переданы в другой  сц (есть менеджер, выставлен счет, продление, были проблемы с входом, партнеры)");
+            statuses.add("8. Пользователи КФ/КЭ (пользователь КЭ, хватает того функционала, что есть)");
     }
 
     /**
@@ -118,19 +126,7 @@ private static ObservableList<Person> telsToCall=FXCollections.observableArrayLi
      */
     @FXML
     private void initialize() {
-       	int hours = 9;
-    	String correctHour = null;
-        for (int j = 2;j<23;j++){
-        	if ((j & 1) != 1 )correctHour = hours+":00";
-        	else {
-        		correctHour=hours+":30";
-        		hours++;
-        	}
-    	if (correctHour!=null){
 
-    		times.add(correctHour);
-    	}
-        }
         calendaar.setPadding(new Insets(5));
         calendaar.setHgap(0);
         calendaar.setVgap(0);
@@ -145,10 +141,10 @@ private static ObservableList<Person> telsToCall=FXCollections.observableArrayLi
         showPersonDetails("");
         initTelLabel.getItems().add(new SeparatorMenuItem());
 
-        //(".box:disable{: -visibility:0}")
 timePick.setItems(times);
-        // Listen for selection changes and show the person details when changed.
+statusField.setItems(statuses);
 
+        // Listen for selection changes and show the person details when changed.
         telephones.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showPersonDetails(newValue));
     }
@@ -177,13 +173,12 @@ timePick.setItems(times);
         if (persona !="") {
             // Fill the labels with info from the person object.
         	Person person=getPersonByTel(persona);
+        	if (person!=null){
             initTelLabel.setText(person.getinitTel());
-
-
-            for(int i=3;i<initTelLabel.getItems().size();i++){
-            	initTelLabel.getItems().remove(i);
+           int size=initTelLabel.getItems().size();
+            for(int x=3;x<size;x++){
+            	initTelLabel.getItems().remove(3);
             	}
-      
            ObservableList<Person> listt= getSimilarIp(person);
            int i=listt.size();
            if(i>0)howMany.setSelected(true);
@@ -207,10 +202,12 @@ timePick.setItems(times);
             whereFromLabel.setText(person.getwhereFrom());
             promoCodeLabel.setText(person.getpromoCode());
             diffTimeLabel.setText(person.getdiffTime());
-            queryTimeLabel.setText(TimeUtil.format(person.getqueryTime()));
+            queryTimeLabel.setText(person.getqueryTime());
             queryDateLabel.setText(DateUtil.format(person.getqueryDate()));
-       //     if(person.getcomments()!=null)commentsField.setText(person.getcomments());
-        //    else commentsField.setText("");
+            if(person.getstatus()!=null){
+            int tempStatus= Integer.parseInt(person.getstatus());
+            statusField.getSelectionModel().select(tempStatus-1);}
+            else statusField.getSelectionModel().select(null);
             LocalDateTime tempDatec= person.getnextCall();
     
             if (tempDatec!=null)DatePick.setValue(tempDatec.toLocalDate());
@@ -219,7 +216,10 @@ timePick.setItems(times);
             if (tempDatec!=null)timePick.getSelectionModel().select(indexByTime(tempDatec));
             else timePick.getSelectionModel().select(null);
             commentsField.setText(person.getcomments());
-        } else {
+            eMailField.setText(person.geteMail());
+            firstNameLabel.setText(person.getname1());
+            
+        	}} else {
             // Person is null, remove all the text.
             initTelLabel.setText("");
             theIPLabel.setText("");
@@ -256,7 +256,6 @@ timePick.setItems(times);
             alert.setTitle("No Selection");
             alert.setHeaderText("No Person Selected");
             alert.setContentText("Please select a person in the table.");
-            
             alert.showAndWait();
         }
     }
@@ -286,20 +285,17 @@ timePick.setItems(times);
             if (okClicked) {
                 showPersonDetails(selectedPerson);
             }
-
         } else {
             // Nothing selected.
             Alert alert = new Alert(AlertType.WARNING);
             alert.initOwner(mainApp.getPrimaryStage());
             alert.setTitle("No Selection");
             alert.setHeaderText("No Person Selected");
-            alert.setContentText("Please select a person in the table.");
-            
+            alert.setContentText("Please select a person in the table.");           
             alert.showAndWait();
         }
     }
    
-    
     private static void log(Object o) {
         System.out.println(""+o);
    }
@@ -317,9 +313,6 @@ timePick.setItems(times);
         	hi++;
         }
     	return hi;
-    }
-    public static ObservableList<String> getTimes(){
-    	return times;
     }
     
     
@@ -506,7 +499,7 @@ timePick.setItems(times);
 	}
 	public void addTimeLine(){
 		int i = (int) currentWeekMonday.until(LocalDate.now(), ChronoUnit.DAYS);
-		if (i<6&&i>-1){
+		if (i<5&&i>-1){
 		if(LocalTime.now().isAfter(LocalTime.of(9,0))&&LocalTime.now().isBefore(LocalTime.of(19,0))){
 	
 		Line line = new Line();
@@ -524,7 +517,14 @@ timePick.setItems(times);
 	//	k =  Utils.scale(k, 0, LocalTime.now().getMinute(), 0, 32);
 		System.out.println(1+k*0.85);
 		line.setTranslateY(k*0.85);
+		System.out.println(i);
 		calendaar.add(line, i+1, j+2);
+		Line line2 = new Line();
+		line2.setEndX(60);
+		line2.setStrokeWidth(1.5);
+		line2.setTranslateY(k*0.85);
+		GridPane.setValignment(line2, VPos.TOP);
+		calendaar.add(line2, 0, j+2);
 		}
 		}
 	}
@@ -563,12 +563,28 @@ timePick.setItems(times);
 	@FXML
 	private void fireSearch(){
 		String searcht = SearchField.getText();
+		List<String> choices = new ArrayList<>();
 		for(Person p:mainApp.getPersonData()){
-			if(p.getinitTel().equals(searcht)){
-				showPersonDetails(p.getinitTel());
-				break;
+			if(p.getinitTel().contains(searcht)){
+				choices.add(p.getinitTel());
 			}
 		}
+	if(choices.size()>1){
+		ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+		dialog.setTitle("Поиск");
+		dialog.setHeaderText("Найдено несколько телефонов");
+		dialog.setContentText("Телефон:");
+
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()){
+			showPersonDetails(result.get());
+		    System.out.println("Your choice: " + result.get());
+		}
+	}
+	else if(choices.size()==1){
+		showPersonDetails(choices.get(0));
+	}
 		SearchField.setText("");
 	}
 	
@@ -584,10 +600,13 @@ timePick.setItems(times);
 	@FXML
 	private void SaveAllButt(){
 		Person saved=getPersonByTel(initTelLabel.getText());
-		System.out.println(commentsField.getText());
 		saved.setcomments(commentsField.getText());
-		firstNameLabel.getText();
+		saved.setname1(firstNameLabel.getText());
+		saved.seteMail(eMailField.getText());
+		saved.setstatus(String.valueOf(statusField.getSelectionModel().getSelectedIndex()+1));
 	}
+	@FXML
+	private void sortTel(){mainApp.sortTelList();}
 	public void newListWeek(){
 		telsToCall.clear();
 		LocalDateTime tempDat;

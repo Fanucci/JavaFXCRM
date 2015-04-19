@@ -6,5 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Excel"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSOUP"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/CSV"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/csv"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

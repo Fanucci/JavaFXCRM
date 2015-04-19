@@ -3,6 +3,8 @@ package ch.makery.address;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -29,7 +31,7 @@ public class MainApp extends Application {
      */
     private ObservableList<Person> personDataBase = FXCollections.observableArrayList();
     private ObservableList<String> newTels = FXCollections.observableArrayList();
-    
+    ObservableList<Person> per= FXCollections.observableArrayList();
 
 
     /**
@@ -158,9 +160,10 @@ public class MainApp extends Application {
         }
     }
 public void newPersonList(ObservableList<Person> pers){
+	per=pers;
 	newTels.clear();
 	for(Person sf:pers)personDataBase.add(sf);
-    for (Person s:personDataBase)newTels.add(s.getinitTel());
+    for (Person s:pers)newTels.add(s.getinitTel());
   
 }
 public void oldPersonList(ObservableList<Person> pers){
@@ -168,6 +171,24 @@ public void oldPersonList(ObservableList<Person> pers){
 }
 public ObservableList<String> getNewTelsData() {
     return newTels;
+}
+
+public ObservableList<Person> getTelsPers() {
+    return per;
+}
+
+public void sortTelList(){
+    Comparator<Person> comparatorMyObject_byRegion = new Comparator<Person>() {
+        @Override
+        public int compare(Person o1, Person o2) {
+        	if(o1.getdiffTime()!=null&&o2.getdiffTime()!=null)
+            return -Integer.parseInt(o1.getdiffTime())+Integer.parseInt(o2.getdiffTime());
+        	else return 0;
+        }
+    };
+Collections.sort(per, comparatorMyObject_byRegion);
+newTels.clear();
+for (Person s:per)newTels.add(s.getinitTel());
 }
     /**
      * Returns the main stage.
