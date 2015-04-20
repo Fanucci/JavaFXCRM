@@ -1,5 +1,6 @@
 package ch.makery.address.view;
 
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,6 +10,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -56,7 +62,7 @@ public class PersonOverviewController {
     @FXML
     private Button SaveButton;
     @FXML
-	protected GridPane calendaar;
+	protected GridPane calendaar,telsGrid;
     @FXML
     private MenuButton initTelLabel;
     @FXML
@@ -498,7 +504,7 @@ statusField.setItems(statuses);
 		if(LocalTime.now().isAfter(LocalTime.of(9,0))&&LocalTime.now().isBefore(LocalTime.of(19,0))){
 	
 		Line line = new Line();
-		line.setEndX(261);
+		line.setEndX(205);
 		line.setStrokeWidth(2);
 		GridPane.setValignment(line, VPos.TOP);
 		
@@ -510,14 +516,13 @@ statusField.setItems(statuses);
 		double k=LocalTime.now().getMinute();
 		if (LocalTime.now().getMinute()>=30)k=k-30;
 	//	k =  Utils.scale(k, 0, LocalTime.now().getMinute(), 0, 32);
-		System.out.println(1+k*0.85);
 		line.setTranslateY(k*0.85);
 		System.out.println(i);
 		calendaar.add(line, i+1, j+2);
 		Line line2 = new Line();
 		line2.setEndX(60);
 		line2.setStrokeWidth(1.5);
-		line2.setTranslateY(k*0.85);
+		line2.setTranslateY(0.25+k*0.85);
 		GridPane.setValignment(line2, VPos.TOP);
 		calendaar.add(line2, 0, j+2);
 		}
@@ -599,6 +604,50 @@ statusField.setItems(statuses);
 		saved.setname1(firstNameLabel.getText());
 		saved.seteMail(eMailField.getText());
 		saved.setstatus(String.valueOf(statusField.getSelectionModel().getSelectedIndex()+1));
+	}
+	
+	@FXML
+	private void reloadCalls(){
+		Document doc;
+		String curTel=initTelLabel.getText();
+		if (curTel!=""){
+		telsGrid.getChildren().clear();
+		telsGrid.add(new Label("Дата"),0,0);
+		telsGrid.add(new Label("Длительность"),1,0);
+		telsGrid.add(new Label("Запись"),2,0);
+	
+		try {
+			// need http protocol
+			doc = Jsoup.connect("http://192.168.67.25/cc-line24/reports.php/calls/out?date[start]=01.01.2013+00%3A00&date[end]=01.01.2016+23%3A50&phone=&calleeid="
+			+curTel+
+			"&callstatus=&uniqueid=&paginator[prev_request_hash]=3f9c396dd598ebd33078f9b26a7fd5fe&paginator[page]=1&sort[by]=date&sort[dir]=asc")
+					.timeout(10*1000)
+					.data("user","74675")
+					.data("pass","74675")
+					.post();
+	 
+			// get page title
+			Elements name = doc.select("tr");
+			int iter=0;
+			for (Element link : name) {
+				
+			System.out.println("name : " + link.text());
+			System.out.println(link.getElementsByClass("datetime").text());
+			Label l = new Label(link.getElementsByClass("datetime").text());
+			Label e = new Label();
+			Element s=link.getElementsByClass("duration").last();
+			if(s!=null){
+		System.out.println(s.text());
+		e.setText(s.text());}
+			
+			telsGrid.add(l,0,iter);
+			telsGrid.add(e,1,iter);
+			iter++;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		}
 	}
 	@FXML
 	private void sortTel(){mainApp.sortTelList();}
