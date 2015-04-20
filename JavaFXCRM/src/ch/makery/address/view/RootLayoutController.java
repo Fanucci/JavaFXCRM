@@ -2,22 +2,15 @@ package ch.makery.address.view;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ch.makery.address.MainApp;
 import ch.makery.address.model.ExcelParser;
 import ch.makery.address.model.Person;
-import ch.makery.address.util.DateUtil;
-import ch.makery.address.util.TimeUtil;
 
 /**
  * Dialog to edit details of a person.

@@ -1,5 +1,4 @@
 package ch.makery.address.util;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,13 +6,20 @@ import java.io.IOException;
 import au.com.bytecode.opencsv.CSVReader;
  
 public class CSV {
-     static String CodePath = "C:\\Users\\ִלטענטי\\git\\JavaFXCRM\\JavaFXCRM\\src\\Kody.csv";
+
      FileReader FR;
      static CSVReader reader;
-	public static void changeCodes(File file2){
-    	CodePath = file2.getPath();
-	}
+
 	public CSV() throws FileNotFoundException{
+	     String CodePath="C:\\Users\\ִלטענטי\\git\\JavaFXCRM\\JavaFXCRM\\src\\Kody.csv";
+	     
+	/*	try {
+			CodePath=CSV.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			CodePath = URLDecoder.decode(CodePath, "UTF-8");
+		} catch (URISyntaxException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 		FR= new FileReader(CodePath);
 		
 	}

@@ -1,7 +1,5 @@
 package ch.makery.address.model;
 
-import ch.makery.address.util.CSV;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Iterator;
@@ -160,6 +157,7 @@ public class ExcelParser {
             if (cell!=null) newList.add(readRow(row,isNew));
             }
         	return newList;
+        	
 
     }
 	

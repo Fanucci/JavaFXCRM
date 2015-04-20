@@ -7,7 +7,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ch.makery.address.model.Person;
 import ch.makery.address.util.DateUtil;
-import ch.makery.address.util.TimeUtil;
 
 /**
  * Dialog to edit details of a person.
