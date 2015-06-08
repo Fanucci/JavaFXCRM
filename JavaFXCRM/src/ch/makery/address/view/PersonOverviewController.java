@@ -1,6 +1,7 @@
 package ch.makery.address.view;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,12 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -39,6 +37,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
@@ -49,18 +48,25 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+
+import org.apache.poi.ss.usermodel.Hyperlink;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
 import ch.makery.address.util.DateUtil;
+import ch.makery.address.util.Utils;
 
 public class PersonOverviewController {
   Person superPerson;
 
     @FXML
     private ListView<String> telephones;
-    @FXML
-    private Button SaveButton;
     @FXML
 	protected GridPane calendaar,telsGrid;
     @FXML
@@ -74,9 +80,13 @@ public class PersonOverviewController {
     @FXML
 	public DatePicker DatePick;
     @FXML
-	public ChoiceBox<String> timePick,statusField;
+   	public ComboBox<String> statusField;
+    @FXML
+	public ChoiceBox<String> timePick;
     @FXML
  	public CheckBox howMany;
+    @FXML
+ 	public VBox linksBox;
     private MainApp mainApp;
 	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
 	  DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("d/M/yyyy H:mm");
@@ -147,9 +157,27 @@ statusField.setItems(statuses);
 
         // Listen for selection changes and show the person details when changed.
         telephones.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> showPersonDetails(newValue));
+                (observable, oldValue, newValue) -> {            	
+                showPersonDetails(newValue);
+                reloadLinks();
+                
+                });
+        firstNameLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+        	getPersonByTel(initTelLabel.getText()).setname1(newValue);
+		});
+        eMailField.textProperty().addListener((observable, oldValue, newValue) -> {
+        	getPersonByTel(initTelLabel.getText()).seteMail(newValue);
+		});
+        commentsField.textProperty().addListener((observable, oldValue, newValue) -> {
+        	getPersonByTel(initTelLabel.getText()).setcomments(newValue);
+		});
+        statusField.valueProperty().addListener((observable, oldValue, newValue)-> {
+        	if(newValue!=""&&newValue!=null)
+        	getPersonByTel(initTelLabel.getText()).setstatus(newValue.substring(0, 1));
+        
+          });
     }
-
+    
     /**
      * Is called by the main application to give a reference back to itself.
      * 
@@ -195,8 +223,6 @@ statusField.setItems(statuses);
                        }
                    });
             	//-->
-            
-            	
             }
             theIPLabel.setText(person.gettheIP());
             regionLabel.setText(person.getregion());
@@ -205,20 +231,20 @@ statusField.setItems(statuses);
             diffTimeLabel.setText(person.getdiffTime());
             queryTimeLabel.setText(person.getqueryTime());
             queryDateLabel.setText(DateUtil.format(person.getqueryDate()));
-            if(person.getstatus()!=null){
-            int tempStatus= Integer.parseInt(person.getstatus());
-            statusField.getSelectionModel().select(tempStatus-1);}
-            else statusField.getSelectionModel().select(null);
-            LocalDateTime tempDatec= person.getnextCall();
-    
-            if (tempDatec!=null)DatePick.setValue(tempDatec.toLocalDate());
-            else DatePick.setValue(null);
-           
-            if (tempDatec!=null)timePick.getSelectionModel().select(indexByTime(tempDatec));
-            else timePick.getSelectionModel().select(null);
             commentsField.setText(person.getcomments());
             eMailField.setText(person.geteMail());
             firstNameLabel.setText(person.getname1());
+            reloadCalls();
+            if(person.getstatus()!=null){
+            int tempStatus= Integer.parseInt(person.getstatus());
+            statusField.getSelectionModel().select(tempStatus-1);
+            }
+            else statusField.getSelectionModel().select(null);
+            LocalDateTime tempDatec= person.getnextCall();
+            if (tempDatec!=null)DatePick.setValue(tempDatec.toLocalDate());
+            else DatePick.setValue(null); 
+            if (tempDatec!=null)timePick.getSelectionModel().select(indexByTime(tempDatec));
+            else timePick.getSelectionModel().select(null);     
             
         	}} else {
             // Person is null, remove all the text.
@@ -297,9 +323,7 @@ statusField.setItems(statuses);
         }
     }
    
-    private static void log(Object o) {
-        System.out.println(""+o);
-   }
+
     public Person getPersonByTel(String tel){
     for(Person a:mainApp.getPersonData()){
     	if(a.getinitTel()==tel) return a;
@@ -315,53 +339,18 @@ statusField.setItems(statuses);
         }
     	return hi;
     }
-    
-    
-    public void addDnDlisteners(Node where){
-        // dnd stuff begin
-    	where.setOnDragDetected(new EventHandler<MouseEvent>() {
-            @Override public void handle(final MouseEvent me) {
-                 log("setOnDragDetected("+me+")");
-                 final Dragboard db = where.startDragAndDrop(TransferMode.COPY);
-                 final ClipboardContent content = new ClipboardContent();
-                 content.putString(where.toString());
-                 log(content);
-                 db.setContent(content);
-                 me.consume();
-            }
-       });
-    	/*where.setOnDragEntered(new EventHandler<DragEvent>() {
-            @Override public void handle(final DragEvent de) {
-            	log("setOnDragEntered("+de+")");
-            }
-       });*/
-       
-    	where.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override public void handle(final DragEvent de) {
-                 de.acceptTransferModes(TransferMode.COPY);
-             	
-                 de.consume();
-            }
-       });
-    	where.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override public void handle(final DragEvent de) {
-                Object source = de.getSource();
-  	          Button clickedBtn = (Button) source; // that's the button that was clicked
-	          int x = GridPane.getColumnIndex(clickedBtn);
-	          int y = GridPane.getRowIndex(clickedBtn);
-  	        
-	          System.out.println(x+"||"+y);
-	          
-  	      Dragboard db = de.getDragboard();
-  	    log(db.getString());
-        //	Person selectedPerson = telephones.getSelectionModel().getSelectedItem();
-        	String telPerson = initTelLabel.getText();
-  	        clickedBtn.setText(telPerson); // prints the id of the button
-            	log("setOnDragDropped("+de+")");
-            }
-       });
-    }
-    
+	 public Node getNodeByRowColumnIndex(final int column,final int row) {
+	        Node result = null;
+	        ObservableList<Node> childrens = calendaar.getChildren();
+	        for(Node node : childrens) {
+	            if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+	                result = node;
+	                break;
+	            }
+	        }
+	        return result;
+	    }
+	 
     public void initGrid(){
         buildDaysOfWeek();
         buildTimes();
@@ -369,65 +358,6 @@ statusField.setItems(statuses);
         buildCallDates();    
         addTimeLine();
     }
-   
-   
-   public void addClickListeners(Button dgfh){
-	   dgfh.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-           @Override
-           public void handle(MouseEvent event) {
-
-        	   int i = GridPane.getColumnIndex(dgfh.getParent());
-        	   int j = GridPane.getRowIndex(dgfh.getParent());
-   	  
-
-   	          String str = null;
-   	            for(Node node : calendaar.getChildren()) {
-   	                if(GridPane.getRowIndex(node) != null&& GridPane.getRowIndex(node) == 1 && GridPane.getColumnIndex(node) == i) {
-   	                	str=((Label) node).getText();
-   	                }
-   	               if(GridPane.getRowIndex(node) != null&& GridPane.getRowIndex(node) == j && GridPane.getColumnIndex(node) == 0) {
-   	            	   str= str+" "+((Label) node).getText();
-   	            	  break;
-   	            }}
-   	          LocalDateTime dateTime = LocalDateTime.parse(str, formatter1);
-   	          
-   	          
-   	         System.out.println(dateTime);
-          	 String ButtText= dgfh.getText();
-               MouseButton button = event.getButton();
-               
-               if(button==MouseButton.PRIMARY){
-              	 if(ButtText==""&&initTelLabel.getText()!=""){
-        	  getPersonByTel(initTelLabel.getText()).setnextCall(dateTime);
-              LocalDate tempDatea=dateTime.toLocalDate();
-              timePick.getSelectionModel().select(indexByTime(dateTime));
-              if (tempDatea!=null)DatePick.setValue(tempDatea);
-        	      dgfh.setText(initTelLabel.getText());  
-           	   calendaar.getChildren().clear();
-           	   initGrid();
-              	 }
-              	 else showPersonDetails(ButtText);
-               }else if(button==MouseButton.SECONDARY){
-            	   if(ButtText!=""){
-            		   getPersonByTel(ButtText).setnextCall(null);
-            		   if (ButtText==initTelLabel.getText()){
-            			   DatePick.setValue(null);
-            			   timePick.getSelectionModel().select(null);
-            		   }
-            		  
-            		   calendaar.getChildren().clear();
-                   	   initGrid();
-            	   }
-
-               }else if(button==MouseButton.MIDDLE){
-               //as
-               }
-       
-
-      	    }
-      	});
-   }
    public void buildDaysOfWeek(){
 	    for (int i = 0;i<5;i++){
 	    	
@@ -447,13 +377,9 @@ statusField.setItems(statuses);
 	      	 calendaar.add(sr, 0, j);
 	    }
 	}
-
 	public void buildCellGrid(){
-
 	    for (int j = 2;j<23;j++){
-
 	        for (int i = 1;i<6;i++){
-	       	 
 	            Button dgfh = new Button(); //can add text
 	            dgfh.setStyle(style1);
 	            if ((j & 1) == 1 )dgfh.setStyle(style2);
@@ -472,7 +398,7 @@ statusField.setItems(statuses);
 	public void buildCallDates(){
 	    newListWeek();
 		for (Person p:telsToCall){
-			
+		//	System.out.println(p.getnextCall());
 			LocalDate temp = p.getnextCall().toLocalDate();
 			LocalTime temp1 = p.getnextCall().toLocalTime();
 			int i = (int) currentWeekMonday.until(temp, ChronoUnit.DAYS);
@@ -484,7 +410,7 @@ statusField.setItems(statuses);
 			dgfh.setText(p.getinitTel());
 
             dgfh.setMaxWidth(Double.MAX_VALUE);
-            dgfh.setMaxHeight(Double.MAX_VALUE);
+
      	   Button newButt = new Button();
            newButt.setStyle(style1);
            if ((j & 1) == 1 )newButt.setStyle(style2);
@@ -494,7 +420,7 @@ statusField.setItems(statuses);
            HBox.setHgrow(dgfh, Priority.ALWAYS);
            HBox.setHgrow(newButt, Priority.ALWAYS);
            hbox1.getChildren().add(newButt);
-            addClickListeners(newButt);
+           addClickListeners(newButt);
 		}
 		
 	}
@@ -504,7 +430,7 @@ statusField.setItems(statuses);
 		if(LocalTime.now().isAfter(LocalTime.of(9,0))&&LocalTime.now().isBefore(LocalTime.of(19,0))){
 	
 		Line line = new Line();
-		line.setEndX(205);
+		line.setEndX(210);
 		line.setStrokeWidth(2);
 		GridPane.setValignment(line, VPos.TOP);
 		
@@ -520,7 +446,7 @@ statusField.setItems(statuses);
 		System.out.println(i);
 		calendaar.add(line, i+1, j+2);
 		Line line2 = new Line();
-		line2.setEndX(60);
+		line2.setEndX(50);
 		line2.setStrokeWidth(1.5);
 		line2.setTranslateY(0.25+k*0.85);
 		GridPane.setValignment(line2, VPos.TOP);
@@ -597,14 +523,7 @@ statusField.setItems(statuses);
         clipboard.setContent(content);
 
 	}
-	@FXML
-	private void SaveAllButt(){
-		Person saved=getPersonByTel(initTelLabel.getText());
-		saved.setcomments(commentsField.getText());
-		saved.setname1(firstNameLabel.getText());
-		saved.seteMail(eMailField.getText());
-		saved.setstatus(String.valueOf(statusField.getSelectionModel().getSelectedIndex()+1));
-	}
+
 	
 	@FXML
 	private void reloadCalls(){
@@ -614,7 +533,7 @@ statusField.setItems(statuses);
 		telsGrid.getChildren().clear();
 		telsGrid.add(new Label("Дата"),0,0);
 		telsGrid.add(new Label("Длительность"),1,0);
-		telsGrid.add(new Label("Запись"),2,0);
+	//	telsGrid.add(new Label("Запись"),2,0);
 	
 		try {
 			// need http protocol
@@ -634,14 +553,15 @@ statusField.setItems(statuses);
 			System.out.println("name : " + link.text());
 			System.out.println(link.getElementsByClass("datetime").text());
 			Label l = new Label(link.getElementsByClass("datetime").text());
-			Label e = new Label();
+			Button e = new Button();
 			Element s=link.getElementsByClass("duration").last();
 			if(s!=null){
 		System.out.println(s.text());
-		e.setText(s.text());}
+		e.setText(s.text());
+		telsGrid.add(e,1,iter);}
 			
 			telsGrid.add(l,0,iter);
-			telsGrid.add(e,1,iter);
+			
 			iter++;
 			}
 		} catch (IOException e) {
@@ -667,25 +587,148 @@ statusField.setItems(statuses);
 			
 		}
 	}
-	 public Node getNodeByRowColumnIndex(final int column,final int row) {
-	        Node result = null;
-	        ObservableList<Node> childrens = calendaar.getChildren();
-	        for(Node node : childrens) {
-	            if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
-	                result = node;
-	                break;
+	@FXML
+	private void reloadLinks(){
+		linksBox.getChildren().clear();
+		Map<String, String> hashmap=Utils.googleNumber(initTelLabel.getText());
+	    int ii=0;
+        for (Map.Entry<String, String> entry: hashmap.entrySet()){
+Button l=new Button(entry.getKey());
+l.setMaxWidth(Double.MAX_VALUE);
+l.setTooltip(new Tooltip(entry.getValue()));
+l.setOnAction((event) -> {
+	mainApp.getHostServices().showDocument(entry.getValue());
+});
+linksBox.getChildren().addAll(l);
+        }
+		
+	}
+	@FXML
+	private void removeFromList(){
+        final int selectedIdx = telephones.getSelectionModel().getSelectedIndex();
+        if (selectedIdx != -1) {
+          final int newSelectedIdx =
+            (selectedIdx == telephones.getItems().size() - 1)
+               ? selectedIdx - 1
+               : selectedIdx;
+          telephones.getItems().remove(selectedIdx);
+          telephones.getSelectionModel().select(newSelectedIdx);
+        }
+	}
+	    private static void log(Object o) {
+	        System.out.println(""+o);
+	   }
+	    public void addDnDlisteners(Node where){
+	        // dnd stuff begin
+	    	where.setOnDragDetected(new EventHandler<MouseEvent>() {
+	            @Override public void handle(final MouseEvent me) {
+	                 log("setOnDragDetected("+me+")");
+	                 final Dragboard db = where.startDragAndDrop(TransferMode.COPY);
+	                 final ClipboardContent content = new ClipboardContent();
+	                 content.putString(where.toString());
+	                 log(content);
+	                 db.setContent(content);
+	                 me.consume();
 	            }
-	        }
-	        return result;
+	       });
+	    	/*where.setOnDragEntered(new EventHandler<DragEvent>() {
+	            @Override public void handle(final DragEvent de) {
+	            	log("setOnDragEntered("+de+")");
+	            }
+	       });*/
+	       
+	    	where.setOnDragOver(new EventHandler<DragEvent>() {
+	            @Override public void handle(final DragEvent de) {
+	                 de.acceptTransferModes(TransferMode.COPY);
+	             	
+	                 de.consume();
+	            }
+	       });
+	    	where.setOnDragDropped(new EventHandler<DragEvent>() {
+	            @Override public void handle(final DragEvent de) {
+	                Object source = de.getSource();
+	  	          Button clickedBtn = (Button) source; // that's the button that was clicked
+		          int x = GridPane.getColumnIndex(clickedBtn);
+		          int y = GridPane.getRowIndex(clickedBtn);
+	  	        
+		          System.out.println(x+"||"+y);
+		          
+	  	      Dragboard db = de.getDragboard();
+	  	    log(db.getString());
+	        //	Person selectedPerson = telephones.getSelectionModel().getSelectedItem();
+	        	String telPerson = initTelLabel.getText();
+	  	        clickedBtn.setText(telPerson); // prints the id of the button
+	            	log("setOnDragDropped("+de+")");
+	            }
+	       });
 	    }
-/*	 scene.widthProperty().addListener(new ChangeListener<Number>() {
-		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-		        System.out.println("Width: " + newSceneWidth);
-		    }
-		});
-		scene.heightProperty().addListener(new ChangeListener<Number>() {
-		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-		        System.out.println("Height: " + newSceneHeight);
-		    }
-		});*/
+	   public void addClickListeners(Button dgfh){
+		   dgfh.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+	           @Override
+	           public void handle(MouseEvent event) {
+
+	        	   int i = GridPane.getColumnIndex(dgfh.getParent());
+	        	   int j = GridPane.getRowIndex(dgfh.getParent());
+	   	  
+
+	   	          String str = null;
+	   	            for(Node node : calendaar.getChildren()) {
+	   	                if(GridPane.getRowIndex(node) != null&& GridPane.getRowIndex(node) == 1 && GridPane.getColumnIndex(node) == i) {
+	   	                	str=((Label) node).getText();
+	   	                }
+	   	               if(GridPane.getRowIndex(node) != null&& GridPane.getRowIndex(node) == j && GridPane.getColumnIndex(node) == 0) {
+	   	            	   str= str+" "+((Label) node).getText();
+	   	            	  break;
+	   	            }}
+	   	          LocalDateTime dateTime = LocalDateTime.parse(str, formatter1);
+	   	          
+	   	          
+	   	         //System.out.println(dateTime);
+	          	 String ButtText= dgfh.getText();
+	               MouseButton button = event.getButton();
+	               
+	               if(button==MouseButton.PRIMARY){
+	              	 if(ButtText==""&&initTelLabel.getText()!=""){
+	        	  getPersonByTel(initTelLabel.getText()).setnextCall(dateTime);
+	              LocalDate tempDatea=dateTime.toLocalDate();
+	              timePick.getSelectionModel().select(indexByTime(dateTime));
+	              if (tempDatea!=null)DatePick.setValue(tempDatea);
+	        	      dgfh.setText(initTelLabel.getText());  
+	           	   calendaar.getChildren().clear();
+	           	   initGrid();
+	              	 }
+	              	 else showPersonDetails(ButtText);
+	               }else if(button==MouseButton.SECONDARY){
+	            	   if(ButtText!=""){
+	            		   getPersonByTel(ButtText).setnextCall(null);
+	            		   if (ButtText==initTelLabel.getText()){
+	            			   DatePick.setValue(null);
+	            			   timePick.getSelectionModel().select(null);
+	            		   }
+	            		  
+	            		   calendaar.getChildren().clear();
+	                   	   initGrid();
+	            	   }
+
+	               }else if(button==MouseButton.MIDDLE){
+	               //as
+	               }
+	       
+
+	      	    }
+	      	});
+	   }
+	   
+	   /*	 scene.widthProperty().addListener(new ChangeListener<Number>() {
+	    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+	        System.out.println("Width: " + newSceneWidth);
+	    }
+	});
+	scene.heightProperty().addListener(new ChangeListener<Number>() {
+	    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+	        System.out.println("Height: " + newSceneHeight);
+	    }
+	});*/
+
 }

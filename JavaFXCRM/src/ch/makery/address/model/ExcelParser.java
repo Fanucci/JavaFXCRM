@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.Iterator;
 
 import javafx.collections.FXCollections;
@@ -41,6 +42,7 @@ public class ExcelParser {
 	XSSFWorkbook workbook;
 	XSSFSheet sheet;
 	CellStyle hlink_style;
+	CellStyle date;
 	FileInputStream file;
 	Iterator<Row> rowIterator;
 	Cell cell;
@@ -52,11 +54,14 @@ public class ExcelParser {
 		workbook = new XSSFWorkbook(file);
         sheet = workbook.getSheetAt(0);
         hlink_style = workbook.createCellStyle();
+
         Font hlink_font = workbook.createFont();
         hlink_font.setUnderline(Font.U_SINGLE);
         hlink_font.setColor(IndexedColors.BLUE.getIndex());
         hlink_style.setFont(hlink_font);
         createHelper = workbook.getCreationHelper();
+        date = workbook.createCellStyle();
+        date.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
         rowIterator = sheet.iterator();
         rowsQ=sheet.getPhysicalNumberOfRows();
         System.out.println("Total rows:" + rowsQ);
@@ -94,7 +99,8 @@ public class ExcelParser {
        
         cell = row.getCell(14);
         if(cell!=null&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
-        	nextCall = LocalDateTime.ofInstant(Instant.ofEpochMilli(cell.getDateCellValue().getTime()), ZoneOffset.UTC);
+        	nextCall = LocalDateTime.ofInstant(Instant.ofEpochMilli(cell.getDateCellValue().getTime()), ZoneOffset.ofHours(+5));
+        	System.out.println(nextCall);
         }    
         
         cell = row.getCell(7);
@@ -141,12 +147,26 @@ public class ExcelParser {
 	}
 	
     private void writeRow(Row row,Person p, boolean isNew) {
+    	row.createCell(0).setCellValue(p.getinitTel());
+    	if(p.getqueryDate()!=null){Date out = Date.from(p.getqueryDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+    	cell = row.createCell(1);
+    	cell.setCellValue(out);
+    	cell.setCellStyle(date);
+    	}
+    	row.createCell(2).setCellValue(p.getqueryTime());
+    	row.createCell(3).setCellValue(p.gettheIP());
+    	row.createCell(4).setCellValue(p.getpromoCode());
+    	row.createCell(4).setCellValue(p.getpromoCode());
+    	row.createCell(9).setCellValue(p.getregion());
+    	row.createCell(11).setCellValue(p.getstatus());
     	row.createCell(12).setCellValue(p.getcomments());
     	row.createCell(13).setCellValue(p.geteMail());
-    	row.createCell(11).setCellValue(p.getstatus());
-    	row.createCell(9).setCellValue(p.getregion());
     	row.createCell(10).setCellValue(p.getdiffTime());
-	
+    	if(p.getnextCall()!=null){Date out = Date.from(p.getnextCall().atZone(ZoneId.systemDefault()).toInstant());
+    	cell = row.createCell(14);
+    	cell.setCellValue(out);
+    	cell.setCellStyle(date);
+    	}
 }
 	public ObservableList<Person> readNewBase(boolean isNew) throws UnsupportedEncodingException, IOException {
 

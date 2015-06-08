@@ -102,7 +102,7 @@ public String parseNumber(String num){
 			return "http://192.168.67.25/cc-line24/reports.php/calls/out?date[start]=31.12.2013+00%3A00&date[end]=31.12.2017+23%3A50&phone=&calleeid="+num+"&callstatus=&uniqueid=&paginator[page]=0+%D1%81%D1%82%D1%80.&sort[by]=date&sort[dir]=asc";
 		
 		}
-		public static  Map<String, String> googleNumber(String num) throws UnsupportedEncodingException, IOException{
+		public static  Map<String, String> googleNumber(String num){
 			String search = num;
 			String google = "http://www.google.com/search?q=";
 			String charset = "UTF-8";
@@ -110,12 +110,23 @@ public String parseNumber(String num){
 			 Map<String, String> hashmap = new HashMap<String, String>();
 			// System.out.println(search);
 
-			Elements links = Jsoup.connect(google + URLEncoder.encode(search, charset)).userAgent(userAgent).get().select("li.g>h3>a");
+			Elements links = null;
+			try {
+				links = Jsoup.connect(google + URLEncoder.encode(search, charset)).userAgent(userAgent).get().select("li.g>h3>a");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			for (Element link : links) {
 			    String title = link.text();
 			    String url = link.absUrl("href"); // Google returns URLs in format "http://www.google.com/url?q=<url>&sa=U&ei=<someKey>".
-			    url = URLDecoder.decode(url.substring(url.indexOf('=') + 1, url.indexOf('&')), "UTF-8");
+			    try {
+					url = URLDecoder.decode(url.substring(url.indexOf('=') + 1, url.indexOf('&')), "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			    if (!url.startsWith("http")) {
 			        continue; // Ads/news/etc.
@@ -188,6 +199,7 @@ public String parseNumber(String num){
 			list.add("poisk-mobile");
 			list.add("helpalias");
 			list.add("chei-nomer");
+			list.add("tel-names");
 			
 			for(String i:list) if(url.contains(i))return true;
 			return false;

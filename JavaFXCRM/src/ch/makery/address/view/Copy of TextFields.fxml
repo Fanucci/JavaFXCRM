@@ -16,7 +16,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.1, 0.2" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane dividerPositions="0.1, 0.3" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" SplitPane.resizableWithParent="false">
                            <children>
@@ -24,13 +24,12 @@
                               <ListView fx:id="telephones" layoutX="2.0" layoutY="36.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="432.0" prefWidth="148.0">
+                        <AnchorPane prefHeight="500.0" prefWidth="148.0" SplitPane.resizableWithParent="false">
                            <children>
                               <GridPane fx:id="telsGrid" layoutX="-32.0" layoutY="146.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
                                 <columnConstraints>
                                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
                                     <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
-                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
                                 </columnConstraints>
                                 <rowConstraints>
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -53,7 +52,6 @@
                                  <children>
                                     <Label text="Дата" />
                                     <Label text="Длительность" GridPane.columnIndex="1" />
-                                    <Label text="Запись" GridPane.columnIndex="2" />
                                  </children>
                               </GridPane>
                               <Button maxHeight="-Infinity" mnemonicParsing="false" onAction="#reloadCalls" prefHeight="20.0" text="Обновить" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -123,6 +121,7 @@
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="40.0" vgrow="ALWAYS" />
@@ -141,7 +140,6 @@
                         <Label text="Время запроса" GridPane.rowIndex="3" />
                         <Label text="Промокод" GridPane.rowIndex="5" />
                         <Label text="Дата запроса" GridPane.rowIndex="4" />
-                        <Button fx:id="SaveButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#SaveAllButt" style="-fx-padding: 0; -fx-background-radius: 0;" text="Сохранить" GridPane.columnIndex="5" GridPane.rowIndex="4" />
                         <Label fx:id="regionLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="queryTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label fx:id="queryDateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -186,7 +184,10 @@
                            </graphic>
                         </MenuButton>
                         <Label text="Статус" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                        <ChoiceBox fx:id="statusField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="10.0" prefWidth="150.0" style="-fx-padding: 0;" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="statusField" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#reloadLinks" text="Получить ссылки" GridPane.columnIndex="6" />
+                        <VBox fx:id="linksBox" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" />
+                        <Button mnemonicParsing="false" onAction="#removeFromList" text="Убрать из списка" GridPane.columnIndex="5" GridPane.rowIndex="4" />
                      </children>
                   </GridPane>
                   <ButtonBar layoutX="54.0" layoutY="250.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
